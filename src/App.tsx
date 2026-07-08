@@ -12,11 +12,14 @@ import Documents from './pages/Documents';
 import Settings from './pages/Settings';
 import { useWeddingStore } from './store/useWeddingStore';
 import { useFxStore } from './store/useFxStore';
+import { useSyncStore } from './store/useSyncStore';
+import { startSync } from './lib/syncManager';
 
 export default function App() {
   const { i18n } = useTranslation();
   const language = useWeddingStore((s) => s.language);
   const refreshRate = useFxStore((s) => s.refresh);
+  const syncEnabled = useSyncStore((s) => s.enabled);
 
   // i18n initialises at 'vi'; on load (and any change) align it with the
   // persisted language so both UI chrome and content render in one language.
@@ -31,6 +34,19 @@ export default function App() {
   useEffect(() => {
     refreshRate();
   }, [refreshRate]);
+
+  // Start cloud sync when it's turned on, and re-check on focus.
+  useEffect(() => {
+    if (!syncEnabled) return;
+    startSync();
+    const onFocus = () => startSync();
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onFocus);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onFocus);
+    };
+  }, [syncEnabled]);
 
   return (
     <HashRouter>
