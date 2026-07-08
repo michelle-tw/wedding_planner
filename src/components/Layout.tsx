@@ -105,7 +105,6 @@ export default function Layout() {
           <Heart size={13} className="-translate-y-px text-blush-400" strokeWidth={2} fill="currentColor" />
           Luân
         </p>
-        <p className="mt-1 text-[11px] tracking-wide text-ink-soft/70">Việt Nam · Đài Loan · 2027</p>
       </footer>
     </div>
   );
