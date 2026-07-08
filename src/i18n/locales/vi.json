@@ -64,14 +64,9 @@
     "priority": "Ưu tiên",
     "highPriority": "Ưu tiên cao",
     "canCut": "Có thể cắt giảm",
-    "suggestion": "Gợi ý",
-    "suggestionText": "Bạn vừa tăng ngân sách cho \"{{category}}\". Cân nhắc giảm ở hạng mục có thể cắt giảm như \"{{suggestName}}\" để giữ tổng ngân sách. Ưu tiên giữ nguyên Đồ ăn và Phóng sự cưới.",
-    "dismiss": "Bỏ qua",
     "overBudget": "Vượt ngân sách",
     "underBudget": "Trong ngân sách",
-    "guestCountRef": "Số khách hiện tại: {{count}} người.",
-    "principleTitle": "Nguyên tắc phân bổ",
-    "principleText": "Dồn mạnh vào đồ ăn + phóng sự/video, cắt tối đa lễ nghi truyền thống và chụp ảnh studio, giữ khoản dự phòng hợp lý vì tiệc ngoài trời dễ phát sinh chi phí."
+    "guestCountRef": "Số khách hiện tại: {{count}} người."
   },
   "tasks": {
     "heading": "Công việc cần làm",

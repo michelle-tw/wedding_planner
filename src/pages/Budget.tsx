@@ -1,48 +1,18 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Star, StarOff, X, Lightbulb } from 'lucide-react';
+import { Star, StarOff } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, VarianceBar, Badge } from '../components/ui';
-import { formatVnd } from '../lib/utils';
-import { CUT_FIRST_ORDER, NEVER_CUT } from '../data/seed';
-import type { BudgetCategory } from '../types';
+import { formatVnd, localize } from '../lib/utils';
 
 export default function Budget() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { budget, totalBudgetCap, setTotalBudgetCap, updateBudgetCategory, guests } =
     useWeddingStore();
-
-  const [suggestion, setSuggestion] = useState<{ raisedName: string; suggestId: string } | null>(
-    null
-  );
+  const lang = i18n.language;
 
   const totalPlanned = budget.reduce((sum, b) => sum + b.planned, 0);
   const totalActual = budget.reduce((sum, b) => sum + b.actual, 0);
   const isOverCap = totalPlanned > totalBudgetCap;
-
-  const handlePlannedChange = (cat: BudgetCategory, newValue: number) => {
-    const oldValue = cat.planned;
-    updateBudgetCategory(cat.id, { planned: newValue });
-
-    if (newValue > oldValue && !NEVER_CUT.includes(cat.id)) {
-      // find a can-cut suggestion, preferring categories not equal to the one raised
-      const candidate = CUT_FIRST_ORDER.find((id) => id !== cat.id);
-      if (candidate) {
-        const candidateCat = budget.find((b) => b.id === candidate);
-        if (candidateCat) {
-          setSuggestion({ raisedName: cat.name, suggestId: candidate });
-        }
-      }
-    } else if (newValue > oldValue && NEVER_CUT.includes(cat.id)) {
-      const candidate = CUT_FIRST_ORDER[0];
-      const candidateCat = budget.find((b) => b.id === candidate);
-      if (candidateCat) {
-        setSuggestion({ raisedName: cat.name, suggestId: candidate });
-      }
-    }
-  };
-
-  const suggestedCategory = suggestion ? budget.find((b) => b.id === suggestion.suggestId) : null;
 
   return (
     <div className="space-y-6">
@@ -83,35 +53,6 @@ export default function Budget() {
         </p>
       </Card>
 
-      <Card className="border-gold-200 bg-gold-50">
-        <h3 className="font-serif-heading text-base font-medium text-gold-700">
-          {t('budget.principleTitle')}
-        </h3>
-        <p className="mt-1 text-sm text-ink-soft">{t('budget.principleText')}</p>
-      </Card>
-
-      {suggestion && suggestedCategory && (
-        <div className="flex items-start gap-3 rounded-xl border border-gold-300 bg-gold-50 p-4">
-          <Lightbulb size={20} className="mt-0.5 shrink-0 text-gold-500" strokeWidth={1.75} />
-          <div className="flex-1">
-            <p className="text-sm font-medium text-gold-700">{t('budget.suggestion')}</p>
-            <p className="mt-1 text-sm text-ink-soft">
-              {t('budget.suggestionText', {
-                category: suggestion.raisedName,
-                suggestName: suggestedCategory.name,
-              })}
-            </p>
-          </div>
-          <button
-            onClick={() => setSuggestion(null)}
-            className="shrink-0 rounded-full p-1 text-ink-soft hover:bg-gold-100"
-            aria-label={t('budget.dismiss')}
-          >
-            <X size={16} />
-          </button>
-        </div>
-      )}
-
       <div className="grid grid-cols-1 gap-4">
         {budget.map((cat) => {
           const catOver = cat.actual > cat.planned;
@@ -131,8 +72,12 @@ export default function Budget() {
                     )}
                   </button>
                   <div>
-                    <h3 className="font-serif-heading text-lg font-medium text-ink">{cat.name}</h3>
-                    {cat.note && <p className="mt-0.5 max-w-xl text-xs text-ink-soft">{cat.note}</p>}
+                    <h3 className="font-serif-heading text-lg font-medium text-ink">
+                      {localize(cat.name, lang)}
+                    </h3>
+                    {cat.note && (
+                      <p className="mt-0.5 max-w-xl text-xs text-ink-soft">{localize(cat.note, lang)}</p>
+                    )}
                   </div>
                 </div>
                 <Badge tone={cat.highPriority ? 'gold' : 'neutral'}>
@@ -149,7 +94,9 @@ export default function Budget() {
                     value={cat.planned}
                     min={0}
                     step={500_000}
-                    onChange={(e) => handlePlannedChange(cat, Number(e.target.value) || 0)}
+                    onChange={(e) =>
+                      updateBudgetCategory(cat.id, { planned: Number(e.target.value) || 0 })
+                    }
                   />
                 </div>
                 <div>

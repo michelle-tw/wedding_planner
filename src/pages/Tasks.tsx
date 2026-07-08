@@ -3,13 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { LayoutGrid, GanttChartSquare, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, Badge, ProgressBar } from '../components/ui';
+import { localize } from '../lib/utils';
 import type { PhaseId, TaskItem, TaskStatus } from '../types';
 
 const STATUS_ORDER: TaskStatus[] = ['todo', 'doing', 'done'];
 const PHASE_ORDER: PhaseId[] = ['phase1', 'phase2', 'phase3', 'phase4', 'phase5'];
 
 function TaskCard({ task }: { task: TaskItem }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const moveTask = useWeddingStore((s) => s.moveTask);
   const currentIndex = STATUS_ORDER.indexOf(task.status);
 
@@ -18,8 +20,8 @@ function TaskCard({ task }: { task: TaskItem }) {
       <div className="mb-1.5 flex items-center justify-between gap-2">
         <Badge tone="gold">{t(`tasks.${task.phase}`)}</Badge>
       </div>
-      <p className="text-sm font-medium text-ink">{task.title}</p>
-      {task.note && <p className="mt-1 text-xs text-ink-soft">{task.note}</p>}
+      <p className="text-sm font-medium text-ink">{localize(task.title, lang)}</p>
+      {task.note && <p className="mt-1 text-xs text-ink-soft">{localize(task.note, lang)}</p>}
       <div className="mt-3 flex items-center justify-between gap-2">
         <button
           disabled={currentIndex === 0}

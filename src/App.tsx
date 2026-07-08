@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Budget from './pages/Budget';
@@ -8,8 +10,21 @@ import Guests from './pages/Guests';
 import Timeline from './pages/Timeline';
 import Documents from './pages/Documents';
 import Settings from './pages/Settings';
+import { useWeddingStore } from './store/useWeddingStore';
 
 export default function App() {
+  const { i18n } = useTranslation();
+  const language = useWeddingStore((s) => s.language);
+
+  // i18n initialises at 'vi'; on load (and any change) align it with the
+  // persisted language so both UI chrome and content render in one language.
+  useEffect(() => {
+    if (language && i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+    document.documentElement.lang = language ?? 'vi';
+  }, [language, i18n]);
+
   return (
     <HashRouter>
       <Routes>

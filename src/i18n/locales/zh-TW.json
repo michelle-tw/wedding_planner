@@ -64,14 +64,9 @@
     "priority": "優先度",
     "highPriority": "高優先",
     "canCut": "可刪減",
-    "suggestion": "建議",
-    "suggestionText": "您剛提高了「{{category}}」的預算。可考慮降低可刪減項目如「{{suggestName}}」以維持總預算。建議優先保留餐飲與婚禮紀錄片項目。",
-    "dismiss": "略過",
     "overBudget": "超出預算",
     "underBudget": "預算內",
-    "guestCountRef": "目前賓客人數：{{count}} 位。",
-    "principleTitle": "分配原則",
-    "principleText": "把預算集中在餐飲與婚禮紀錄片／錄影，盡量刪減傳統儀式與棚拍攝影，並保留合理的備用金，因為戶外婚宴容易產生額外費用。"
+    "guestCountRef": "目前賓客人數：{{count}} 位。"
   },
   "tasks": {
     "heading": "待辦事項",

@@ -2,6 +2,10 @@
 
 export type Lang = 'vi' | 'zh-TW';
 
+// Seed-provided display text carries both languages so it switches with the UI.
+// User-entered text is a plain string (whatever language they typed).
+export type LocalizedText = string | { vi: string; 'zh-TW': string };
+
 export type TaskStatus = 'todo' | 'doing' | 'done';
 
 export type PhaseId = 'phase1' | 'phase2' | 'phase3' | 'phase4' | 'phase5';
@@ -9,8 +13,8 @@ export type PhaseId = 'phase1' | 'phase2' | 'phase3' | 'phase4' | 'phase5';
 export interface TaskItem {
   id: string;
   phase: PhaseId;
-  title: string;
-  note: string;
+  title: LocalizedText;
+  note: LocalizedText;
   status: TaskStatus;
   assignee?: 'bride' | 'groom' | 'parents' | 'both';
 }
@@ -28,11 +32,11 @@ export type BudgetCategoryId =
 
 export interface BudgetCategory {
   id: BudgetCategoryId;
-  name: string;
+  name: LocalizedText;
   planned: number;
   actual: number;
   percent: number;
-  note: string;
+  note: LocalizedText;
   highPriority: boolean; // true = ⭐ high priority (don't cut), false = can-cut
 }
 
@@ -76,7 +80,7 @@ export type DocumentStatus = 'not_started' | 'in_progress' | 'completed';
 
 export interface DocumentItem {
   id: string;
-  name: string;
+  name: LocalizedText;
   category: DocumentCategory;
   status: DocumentStatus;
   link?: string;
@@ -86,17 +90,16 @@ export interface DocumentItem {
 
 export interface ItineraryActivity {
   day: number;
-  title: string;
-  activities: string; // free text, seeded verbatim from source doc
+  activities: LocalizedText;
 }
 
 export interface ItineraryPlan {
   id: 'binh_duong' | 'dai_nam';
   titleKey: string;
   location: string;
-  stayNote: string;
+  stayNote: LocalizedText;
   days: ItineraryActivity[];
-  foodNote: string;
+  foodNote: LocalizedText;
 }
 
 export interface WeddingSettings {

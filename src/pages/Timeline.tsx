@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronDown, MapPin, Utensils, CalendarHeart, Hotel } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, Badge } from '../components/ui';
-import { formatDate } from '../lib/utils';
+import { formatDate, localize } from '../lib/utils';
 import { seedItineraries } from '../data/seed';
 import type { ItineraryPlan } from '../types';
 
@@ -40,7 +40,8 @@ function DayCard({ day, activities, defaultOpen }: { day: number; activities: st
 }
 
 function ItineraryCard({ plan }: { plan: ItineraryPlan }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
 
   return (
     <Card className="space-y-4">
@@ -55,13 +56,13 @@ function ItineraryCard({ plan }: { plan: ItineraryPlan }) {
         <Hotel size={15} className="mt-0.5 shrink-0" strokeWidth={1.75} />
         <div>
           <p className="font-medium text-ink">{t('timeline.stayTip')}</p>
-          <p className="mt-0.5">{plan.stayNote}</p>
+          <p className="mt-0.5">{localize(plan.stayNote, lang)}</p>
         </div>
       </div>
 
       <div className="space-y-2">
         {plan.days.map((d, idx) => (
-          <DayCard key={d.day} day={d.day} activities={d.activities} defaultOpen={idx === 0} />
+          <DayCard key={d.day} day={d.day} activities={localize(d.activities, lang)} defaultOpen={idx === 0} />
         ))}
       </div>
 
@@ -69,7 +70,7 @@ function ItineraryCard({ plan }: { plan: ItineraryPlan }) {
         <Utensils size={15} className="mt-0.5 shrink-0 text-sage-600" strokeWidth={1.75} />
         <div>
           <p className="font-medium text-ink">{t('timeline.foodTip')}</p>
-          <p className="mt-0.5">{plan.foodNote}</p>
+          <p className="mt-0.5">{localize(plan.foodNote, lang)}</p>
         </div>
       </div>
     </Card>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { CalendarHeart, PartyPopper, AlertCircle, ArrowRight } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, ProgressBar, VarianceBar, Badge } from '../components/ui';
-import { daysUntil, formatDate, formatVnd } from '../lib/utils';
+import { daysUntil, formatDate, formatVnd, localize } from '../lib/utils';
 
 function CountdownCard({
   label,
@@ -50,7 +50,8 @@ function CountdownCard({
 }
 
 export default function Dashboard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const { vnWeddingDate, twWeddingDate, totalBudgetCap, budget, tasks, guests } = useWeddingStore();
 
   const totalActual = budget.reduce((sum, b) => sum + b.actual, 0);
@@ -140,8 +141,10 @@ export default function Dashboard() {
             {urgentTasks.map((task) => (
               <li key={task.id} className="flex items-start justify-between gap-3 py-2.5">
                 <div>
-                  <p className="text-sm font-medium text-ink">{task.title}</p>
-                  {task.note && <p className="mt-0.5 text-xs text-ink-soft">{task.note}</p>}
+                  <p className="text-sm font-medium text-ink">{localize(task.title, lang)}</p>
+                  {task.note && (
+                    <p className="mt-0.5 text-xs text-ink-soft">{localize(task.note, lang)}</p>
+                  )}
                 </div>
                 <Badge tone="gold">{t(`tasks.${task.phase}`)}</Badge>
               </li>

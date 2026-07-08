@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Plus, Trash2, ExternalLink, AlertTriangle, FolderLock } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, Badge, EmptyState } from '../components/ui';
-import { genId, daysUntil } from '../lib/utils';
+import { genId, daysUntil, localize } from '../lib/utils';
 import type { DocumentCategory, DocumentItem, DocumentStatus } from '../types';
 
 const CATEGORIES: DocumentCategory[] = ['marriage', 'passport', 'vendor_contract', 'visa', 'other'];
@@ -17,7 +17,7 @@ const statusTone: Record<DocumentStatus, 'neutral' | 'warning' | 'success'> = {
 const EXPIRING_SOON_THRESHOLD_DAYS = 60;
 
 function DocumentCard({ doc }: { doc: DocumentItem }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { updateDocument, deleteDocument } = useWeddingStore();
 
   const daysLeft = doc.expiryDate ? daysUntil(doc.expiryDate) : null;
@@ -29,7 +29,7 @@ function DocumentCard({ doc }: { doc: DocumentItem }) {
       <div className="flex items-start justify-between gap-2">
         <input
           className="input-elegant flex-1 border-none bg-transparent px-0 font-serif-heading text-lg font-medium focus:bg-paper focus:px-2"
-          value={doc.name}
+          value={localize(doc.name, i18n.language)}
           placeholder={t('common.name')}
           onChange={(e) => updateDocument(doc.id, { name: e.target.value })}
         />

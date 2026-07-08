@@ -178,6 +178,47 @@ export const useWeddingStore = create<WeddingState>()(
     }),
     {
       name: 'wedding-planner-state',
+      version: 2,
+      // v1 stored seed content as single-language Vietnamese strings, so switching
+      // language couldn't translate it. v2 re-derives seed content (now bilingual)
+      // while carrying over the user's own edits by id.
+      migrate: (persisted, version) => {
+        const state = persisted as Partial<WeddingState> | undefined;
+        if (!state || version >= 2) return state as WeddingState;
+
+        const oldTasks = Array.isArray(state.tasks) ? state.tasks : [];
+        const statusById = new Map(oldTasks.map((t) => [t.id, t.status]));
+        const seedTaskIds = new Set(seedTasks.map((t) => t.id));
+        state.tasks = [
+          ...seedTasks.map((t) => ({ ...t, status: statusById.get(t.id) ?? t.status })),
+          ...oldTasks.filter((t) => !seedTaskIds.has(t.id)), // user-added tasks
+        ];
+
+        const oldBudget = Array.isArray(state.budget) ? state.budget : [];
+        const budgetById = new Map(oldBudget.map((b) => [b.id, b]));
+        state.budget = seedBudget.map((b) => {
+          const old = budgetById.get(b.id);
+          return old
+            ? { ...b, planned: old.planned, actual: old.actual, highPriority: old.highPriority }
+            : b;
+        });
+
+        const oldDocs = Array.isArray(state.documents) ? state.documents : [];
+        const docById = new Map(oldDocs.map((d) => [d.id, d]));
+        const seedDocIds = new Set(seedDocuments.map((d) => d.id));
+        state.documents = [
+          ...seedDocuments.map((d) => {
+            const old = docById.get(d.id);
+            return old
+              ? { ...d, status: old.status, notes: old.notes, link: old.link, expiryDate: old.expiryDate }
+              : d;
+          }),
+          ...oldDocs.filter((d) => !seedDocIds.has(d.id)), // user-added documents
+        ];
+
+        // vendors & guests are user-entered plain strings — left untouched.
+        return state as WeddingState;
+      },
     }
   )
 );

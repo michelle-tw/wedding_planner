@@ -1,3 +1,12 @@
+import type { Lang, LocalizedText } from '../types';
+
+// Resolve seed content (bilingual object) or user content (plain string) to the active language.
+export function localize(text: LocalizedText | undefined | null, lang: string): string {
+  if (text == null) return '';
+  if (typeof text === 'string') return text;
+  return text[lang as Lang] ?? text.vi ?? '';
+}
+
 export function formatVnd(amount: number): string {
   return new Intl.NumberFormat('vi-VN').format(Math.round(amount)) + ' ₫';
 }
