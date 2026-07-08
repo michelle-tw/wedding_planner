@@ -42,7 +42,11 @@
     "noContact": "Chưa có liên hệ",
     "addImage": "Thêm ảnh",
     "openImage": "Xem ảnh",
-    "images": "Ảnh menu / báo giá"
+    "images": "Ảnh menu / báo giá",
+    "addLink": "Thêm liên kết",
+    "files": "Tệp đính kèm (Word, PDF, Excel)",
+    "addFile": "Thêm tệp",
+    "fileTooLarge": "Tệp \"{{name}}\" quá lớn (tối đa 5MB)"
   },
   "dashboard": {
     "heading": "Tổng quan đám cưới",

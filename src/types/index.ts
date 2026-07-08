@@ -52,6 +52,13 @@ export interface VendorTag {
   name: string;
 }
 
+// An attached document (Word / PDF / Excel…), stored as a base64 data URL.
+export interface VendorFile {
+  name: string;
+  type: string; // MIME type
+  dataUrl: string;
+}
+
 export type NegotiationStatus = 'contacted' | 'negotiating' | 'confirmed';
 
 export interface Vendor {
@@ -63,8 +70,10 @@ export interface Vendor {
   quoteAmount: number;
   status: NegotiationStatus;
   notes: string;
-  link?: string;
+  link?: string; // deprecated — migrated into links
+  links?: string[];
   images?: string[]; // menu / quote photos, stored as compressed data URLs
+  files?: VendorFile[]; // attached Word / PDF / Excel documents
 }
 
 export type GuestSide = 'vn' | 'tw';

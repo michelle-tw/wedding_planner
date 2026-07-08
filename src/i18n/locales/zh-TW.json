@@ -42,7 +42,11 @@
     "noContact": "尚無聯絡方式",
     "addImage": "新增圖片",
     "openImage": "檢視圖片",
-    "images": "菜單／報價圖片"
+    "images": "菜單／報價圖片",
+    "addLink": "新增連結",
+    "files": "附件（Word、PDF、Excel）",
+    "addFile": "新增檔案",
+    "fileTooLarge": "檔案「{{name}}」太大（上限 5MB）"
   },
   "dashboard": {
     "heading": "婚禮總覽",

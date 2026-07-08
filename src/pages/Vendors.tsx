@@ -7,6 +7,7 @@ import { genId } from '../lib/utils';
 import { useCurrency } from '../lib/useCurrency';
 import { useEditableList } from '../lib/useEditableList';
 import { ImageUploader, ImageGallery } from '../components/ImageAttachments';
+import { FileUploader, FileList } from '../components/FileAttachments';
 import type { NegotiationStatus, Vendor, VendorCategory } from '../types';
 
 const BUILTIN_CATEGORIES: VendorCategory[] = [
@@ -60,22 +61,29 @@ function VendorView({ vendor, onEdit }: { vendor: Vendor; onEdit: () => void }) 
           {vendor.quoteAmount > 0 && (
             <span className="font-medium text-ink">{money.format(vendor.quoteAmount)}</span>
           )}
-          {vendor.link && (
+          {(vendor.links ?? []).filter(Boolean).map((lnk, i, arr) => (
             <a
-              href={vendor.link}
+              key={i}
+              href={lnk}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-blush-600 hover:text-blush-700"
             >
               <ExternalLink size={12} />
               {t('common.openLink')}
+              {arr.length > 1 ? ` ${i + 1}` : ''}
             </a>
-          )}
+          ))}
         </div>
         {vendor.notes && <p className="mt-1.5 text-xs text-ink-soft">{vendor.notes}</p>}
         {vendor.images && vendor.images.length > 0 && (
           <div className="mt-2.5">
             <ImageGallery images={vendor.images} />
+          </div>
+        )}
+        {vendor.files && vendor.files.length > 0 && (
+          <div className="mt-2.5">
+            <FileList files={vendor.files} />
           </div>
         )}
       </div>
@@ -106,6 +114,12 @@ function VendorEdit({ vendor, isNew, onDone }: { vendor: Vendor; isNew: boolean;
   const { updateVendor, deleteVendor } = useWeddingStore();
   const [draft, setDraft] = useState<Vendor>(vendor);
   const set = (patch: Partial<Vendor>) => setDraft((d) => ({ ...d, ...patch }));
+
+  const links = draft.links ?? [];
+  const setLinkAt = (i: number, val: string) =>
+    set({ links: links.map((l, j) => (j === i ? val : l)) });
+  const addLink = () => set({ links: [...links, ''] });
+  const removeLinkAt = (i: number) => set({ links: links.filter((_, j) => j !== i) });
 
   const save = () => {
     updateVendor(vendor.id, draft);
@@ -184,15 +198,38 @@ function VendorEdit({ vendor, isNew, onDone }: { vendor: Vendor; isNew: boolean;
             onChange={(e) => set({ quoteAmount: money.fromDisplay(Number(e.target.value) || 0) })}
           />
         </Field>
-        <Field label={t('common.link')}>
-          <input
-            className="input-elegant"
-            value={draft.link ?? ''}
-            placeholder="https://..."
-            onChange={(e) => set({ link: e.target.value })}
-          />
-        </Field>
       </div>
+
+      <Field label={t('common.link')}>
+        <div className="space-y-2">
+          {links.map((lnk, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <input
+                className="input-elegant"
+                value={lnk}
+                placeholder="https://..."
+                onChange={(e) => setLinkAt(i, e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => removeLinkAt(i)}
+                aria-label={t('common.delete')}
+                className="shrink-0 rounded-full p-1.5 text-ink-soft transition-colors hover:bg-blush-50 hover:text-blush-600"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addLink}
+            className="flex items-center gap-1 text-xs text-blush-600 transition-colors hover:text-blush-700"
+          >
+            <Plus size={13} />
+            {t('common.addLink')}
+          </button>
+        </div>
+      </Field>
 
       <Field label={t('common.notes')}>
         <textarea
@@ -204,6 +241,10 @@ function VendorEdit({ vendor, isNew, onDone }: { vendor: Vendor; isNew: boolean;
 
       <Field label={t('common.images')}>
         <ImageUploader images={draft.images ?? []} onChange={(images) => set({ images })} />
+      </Field>
+
+      <Field label={t('common.files')}>
+        <FileUploader files={draft.files ?? []} onChange={(files) => set({ files })} />
       </Field>
 
       <EditActions onSave={save} onCancel={cancel} saveLabel={t('common.save')} cancelLabel={t('common.cancel')} />
@@ -238,8 +279,9 @@ export default function Vendors() {
       quoteAmount: 0,
       status: 'contacted',
       notes: '',
-      link: '',
+      links: [],
       images: [],
+      files: [],
     });
     edit.startNew(id);
   };

@@ -259,7 +259,7 @@ export const useWeddingStore = create<WeddingState>()(
     }),
     {
       name: 'wedding-planner-state',
-      version: 4,
+      version: 5,
       migrate: (persisted, version) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const state = persisted as any;
@@ -303,7 +303,21 @@ export const useWeddingStore = create<WeddingState>()(
           state.vendorTags = [];
         }
 
-        // vendors & guests are user-entered — left untouched.
+        // v<5: a vendor's single `link` becomes a `links` array.
+        if (version < 5 && Array.isArray(state.vendors)) {
+          state.vendors = state.vendors.map((v: Record<string, unknown>) => {
+            const links = Array.isArray(v.links)
+              ? v.links
+              : v.link
+                ? [v.link as string]
+                : [];
+            const { link: _drop, ...rest } = v;
+            void _drop;
+            return { ...rest, links };
+          });
+        }
+
+        // guests are user-entered — left untouched.
         return state as WeddingState;
       },
     }
