@@ -36,7 +36,10 @@
     "no": "否",
     "none": "尚未設定",
     "total": "總計",
-    "back": "返回"
+    "back": "返回",
+    "untitled": "未命名",
+    "openLink": "開啟連結",
+    "noContact": "尚無聯絡方式"
   },
   "dashboard": {
     "heading": "婚禮總覽",

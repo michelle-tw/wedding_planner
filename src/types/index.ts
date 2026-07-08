@@ -59,6 +59,7 @@ export interface Vendor {
   quoteAmount: number;
   status: NegotiationStatus;
   notes: string;
+  link?: string;
 }
 
 export type GuestSide = 'vn' | 'tw';

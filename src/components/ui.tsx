@@ -1,7 +1,49 @@
 import type { PropsWithChildren, ReactNode } from 'react';
+import { Check } from 'lucide-react';
 
 export function Card({ children, className = '' }: PropsWithChildren<{ className?: string }>) {
   return <div className={`card-surface p-5 ${className}`}>{children}</div>;
+}
+
+export function Field({ label, children }: PropsWithChildren<{ label: string }>) {
+  return (
+    <label className="block">
+      <span className="text-xs text-ink-soft">{label}</span>
+      <div className="mt-1">{children}</div>
+    </label>
+  );
+}
+
+export function EditActions({
+  onSave,
+  onCancel,
+  saveLabel,
+  cancelLabel,
+}: {
+  onSave: () => void;
+  onCancel: () => void;
+  saveLabel: string;
+  cancelLabel: string;
+}) {
+  return (
+    <div className="flex items-center justify-end gap-2 pt-1">
+      <button
+        type="button"
+        onClick={onCancel}
+        className="rounded-full border border-line px-4 py-2 text-sm text-ink-soft transition-colors hover:border-blush-300 hover:text-blush-600"
+      >
+        {cancelLabel}
+      </button>
+      <button
+        type="button"
+        onClick={onSave}
+        className="flex items-center gap-1.5 rounded-full bg-blush-500 px-4 py-2 text-sm font-medium text-white shadow-soft transition-colors hover:bg-blush-600"
+      >
+        <Check size={15} strokeWidth={2} />
+        {saveLabel}
+      </button>
+    </div>
+  );
 }
 
 export function SectionHeading({

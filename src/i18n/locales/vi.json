@@ -36,7 +36,10 @@
     "no": "Không",
     "none": "Chưa có",
     "total": "Tổng",
-    "back": "Quay lại"
+    "back": "Quay lại",
+    "untitled": "Chưa đặt tên",
+    "openLink": "Mở liên kết",
+    "noContact": "Chưa có liên hệ"
   },
   "dashboard": {
     "heading": "Tổng quan đám cưới",
