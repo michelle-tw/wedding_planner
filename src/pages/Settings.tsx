@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Download, Upload, RotateCcw, Check, AlertCircle } from 'lucide-react';
 import { useWeddingStore, VN_WEDDING_DATE } from '../store/useWeddingStore';
 import { Card, SectionHeading } from '../components/ui';
+import { SyncSettings } from '../components/SyncSettings';
 import { formatDate } from '../lib/utils';
 import { useCurrency } from '../lib/useCurrency';
 import type { Lang } from '../types';
@@ -160,6 +161,8 @@ export default function Settings() {
           </p>
         )}
       </Card>
+
+      <SyncSettings />
 
       <Card className="space-y-4">
         <h2 className="font-serif-heading text-lg font-medium text-ink">{t('settings.dataManagement')}</h2>

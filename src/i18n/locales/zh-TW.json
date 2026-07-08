@@ -173,6 +173,30 @@
     "importError": "檔案格式不正確，請重新確認。",
     "resetData": "重置所有資料",
     "resetConfirm": "確定要清除所有資料並還原為預設值嗎？",
-    "saved": "已儲存"
+    "saved": "已儲存",
+    "sync": {
+      "title": "雲端同步",
+      "desc": "在電腦與手機之間自動同步資料。",
+      "tabNew": "首次設定",
+      "tabJoin": "連接其他裝置",
+      "configLabel": "Firebase 設定",
+      "configPlaceholder": "貼上 Firebase 設定（Firebase Console → 專案設定 → 網頁應用程式）",
+      "enableBtn": "開啟同步",
+      "setupLabel": "設定碼",
+      "setupPlaceholder": "貼上第一台裝置產生的設定碼",
+      "connectBtn": "連接",
+      "guide": "需要一個已啟用 Firestore 的免費 Firebase 專案。",
+      "statusSynced": "已同步",
+      "statusConnecting": "連接中…",
+      "statusError": "同步錯誤",
+      "lastSynced": "更新於 {{time}}",
+      "shareLabel": "設定碼 — 在其他裝置開啟 App，貼到「連接其他裝置」分頁",
+      "copy": "複製設定碼",
+      "copied": "已複製！",
+      "syncNow": "立即同步",
+      "disable": "關閉同步",
+      "invalidConfig": "Firebase 設定無效，請檢查貼上的內容。",
+      "invalidSetup": "設定碼無效。"
+    }
   }
 }
