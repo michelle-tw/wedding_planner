@@ -102,18 +102,17 @@ export default function Layout() {
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
         <Outlet />
       </main>
-      <footer className="mx-auto max-w-7xl px-4 pb-12 pt-8 text-center sm:px-6">
-        <p className="flex items-center justify-center gap-2 font-serif-heading text-lg text-blush-500">
+      <footer className="mx-auto max-w-7xl px-4 pb-10 pt-6 text-center sm:px-6">
+        <p className="flex items-center justify-center gap-2 font-serif-heading text-base text-blush-500">
           Mi
-          <Heart size={14} className="-translate-y-px text-blush-400" strokeWidth={2} fill="currentColor" />
+          <Heart size={13} className="-translate-y-px text-blush-400" strokeWidth={2} fill="currentColor" />
           Luân
         </p>
-        <div className="mt-3.5 flex items-center justify-center gap-3 text-gold-500">
-          <span className="h-px w-10 bg-gold-300/60" />
-          <span className="text-[10px] uppercase tracking-[0.25em]">Save the date</span>
-          <span className="h-px w-10 bg-gold-300/60" />
-        </div>
-        <p className="mt-1.5 font-serif-heading text-xl text-ink">{saveTheDate}</p>
+        <p className="mt-1.5 flex items-center justify-center gap-2 text-xs text-ink-soft">
+          <span className="uppercase tracking-[0.2em] text-gold-500">Save the date</span>
+          <span className="text-gold-300">·</span>
+          <span className="font-serif-heading text-sm text-ink">{saveTheDate}</span>
+        </p>
       </footer>
     </div>
   );
