@@ -36,6 +36,7 @@ export interface BudgetItem {
   highPriority?: boolean; // ⭐ high priority (don't cut)
 }
 
+// Built-in vendor category ids (translated via i18n vendors.cat_*).
 export type VendorCategory =
   | 'catering'
   | 'videography'
@@ -45,12 +46,19 @@ export type VendorCategory =
   | 'photography'
   | 'other';
 
+// User-added category tag (e.g. bệnh viện, nhẫn cưới, máy bay, khách sạn).
+export interface VendorTag {
+  id: string;
+  name: string;
+}
+
 export type NegotiationStatus = 'contacted' | 'negotiating' | 'confirmed';
 
 export interface Vendor {
   id: string;
   name: string;
-  category: VendorCategory;
+  category: string; // a built-in VendorCategory id, a custom VendorTag id, or 'other'
+  categoryOther?: string; // free-text label used when category === 'other'
   contact: string;
   quoteAmount: number;
   status: NegotiationStatus;

@@ -110,7 +110,10 @@
     "status_negotiating": "Đang đàm phán",
     "status_confirmed": "Đã chốt",
     "quoteAmount": "Báo giá",
-    "noVendors": "Chưa có nhà cung cấp nào trong danh mục này"
+    "noVendors": "Chưa có nhà cung cấp nào trong danh mục này",
+    "addCategory": "Thêm danh mục",
+    "categoryNamePlaceholder": "Tên danh mục (VD: bệnh viện, nhẫn cưới)",
+    "otherPlaceholder": "Nhập tên cụ thể (VD: bệnh viện, khách sạn)"
   },
   "guests": {
     "heading": "Danh sách khách mời",

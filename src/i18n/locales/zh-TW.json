@@ -110,7 +110,10 @@
     "status_negotiating": "洽談中",
     "status_confirmed": "已確認",
     "quoteAmount": "報價",
-    "noVendors": "此類別尚無廠商"
+    "noVendors": "此類別尚無廠商",
+    "addCategory": "新增類別",
+    "categoryNamePlaceholder": "類別名稱（例：醫院、婚戒）",
+    "otherPlaceholder": "輸入具體名稱（例：醫院、飯店）"
   },
   "guests": {
     "heading": "賓客名單",

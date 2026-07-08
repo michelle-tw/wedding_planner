@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Trash2, Users, Pencil, ExternalLink } from 'lucide-react';
+import { Plus, Trash2, Users, Pencil, ExternalLink, X } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, Badge, EmptyState, Field, EditActions } from '../components/ui';
 import { genId } from '../lib/utils';
@@ -9,7 +9,7 @@ import { useEditableList } from '../lib/useEditableList';
 import { ImageUploader, ImageGallery } from '../components/ImageAttachments';
 import type { NegotiationStatus, Vendor, VendorCategory } from '../types';
 
-const CATEGORIES: VendorCategory[] = [
+const BUILTIN_CATEGORIES: VendorCategory[] = [
   'catering',
   'videography',
   'venue',
@@ -18,6 +18,7 @@ const CATEGORIES: VendorCategory[] = [
   'photography',
   'other',
 ];
+const BUILTIN_SET = new Set<string>(BUILTIN_CATEGORIES);
 
 const STATUSES: NegotiationStatus[] = ['contacted', 'negotiating', 'confirmed'];
 
@@ -27,9 +28,21 @@ const statusTone: Record<NegotiationStatus, 'neutral' | 'warning' | 'success'> =
   confirmed: 'success',
 };
 
+// Resolve any category id (built-in / custom tag / 'other' free-text) to a label.
+function useCategoryLabel() {
+  const { t } = useTranslation();
+  const vendorTags = useWeddingStore((s) => s.vendorTags);
+  return (category: string, categoryOther?: string) => {
+    if (category === 'other') return categoryOther?.trim() || t('vendors.cat_other');
+    if (BUILTIN_SET.has(category)) return t(`vendors.cat_${category}`);
+    return vendorTags.find((tag) => tag.id === category)?.name || t('vendors.cat_other');
+  };
+}
+
 function VendorView({ vendor, onEdit }: { vendor: Vendor; onEdit: () => void }) {
   const { t } = useTranslation();
   const money = useCurrency();
+  const categoryLabel = useCategoryLabel();
   const deleteVendor = useWeddingStore((s) => s.deleteVendor);
 
   return (
@@ -39,7 +52,7 @@ function VendorView({ vendor, onEdit }: { vendor: Vendor; onEdit: () => void }) 
           <h3 className="font-serif-heading text-lg font-medium text-ink">
             {vendor.name || <span className="text-ink-soft/70">{t('common.untitled')}</span>}
           </h3>
-          <Badge>{t(`vendors.cat_${vendor.category}`)}</Badge>
+          <Badge>{categoryLabel(vendor.category, vendor.categoryOther)}</Badge>
           <Badge tone={statusTone[vendor.status]}>{t(`vendors.status_${vendor.status}`)}</Badge>
         </div>
         <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-soft">
@@ -86,17 +99,10 @@ function VendorView({ vendor, onEdit }: { vendor: Vendor; onEdit: () => void }) 
   );
 }
 
-function VendorEdit({
-  vendor,
-  isNew,
-  onDone,
-}: {
-  vendor: Vendor;
-  isNew: boolean;
-  onDone: () => void;
-}) {
+function VendorEdit({ vendor, isNew, onDone }: { vendor: Vendor; isNew: boolean; onDone: () => void }) {
   const { t } = useTranslation();
   const money = useCurrency();
+  const vendorTags = useWeddingStore((s) => s.vendorTags);
   const { updateVendor, deleteVendor } = useWeddingStore();
   const [draft, setDraft] = useState<Vendor>(vendor);
   const set = (patch: Partial<Vendor>) => setDraft((d) => ({ ...d, ...patch }));
@@ -125,14 +131,27 @@ function VendorEdit({
           <select
             className="input-elegant"
             value={draft.category}
-            onChange={(e) => set({ category: e.target.value as VendorCategory })}
+            onChange={(e) => set({ category: e.target.value })}
           >
-            {CATEGORIES.map((c) => (
+            {BUILTIN_CATEGORIES.map((c) => (
               <option key={c} value={c}>
                 {t(`vendors.cat_${c}`)}
               </option>
             ))}
+            {vendorTags.map((tag) => (
+              <option key={tag.id} value={tag.id}>
+                {tag.name || t('common.untitled')}
+              </option>
+            ))}
           </select>
+          {draft.category === 'other' && (
+            <input
+              className="input-elegant mt-2"
+              value={draft.categoryOther ?? ''}
+              placeholder={t('vendors.otherPlaceholder')}
+              onChange={(e) => set({ categoryOther: e.target.value })}
+            />
+          )}
         </Field>
         <Field label={t('common.status')}>
           <select
@@ -192,10 +211,19 @@ function VendorEdit({
   );
 }
 
+function tagButtonClass(active: boolean): string {
+  return active
+    ? 'border-blush-400 bg-blush-500 text-white'
+    : 'border-line bg-paper text-ink-soft hover:border-blush-300';
+}
+
 export default function Vendors() {
   const { t } = useTranslation();
-  const { vendors, addVendor } = useWeddingStore();
-  const [filter, setFilter] = useState<VendorCategory | 'all'>('all');
+  const { vendors, vendorTags, addVendor, addVendorTag, deleteVendorTag } = useWeddingStore();
+  const [filter, setFilter] = useState<string>('all');
+  const [addingCat, setAddingCat] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
+  const cancelAdd = useRef(false);
   const edit = useEditableList();
 
   const filtered = filter === 'all' ? vendors : vendors.filter((v) => v.category === filter);
@@ -216,6 +244,28 @@ export default function Vendors() {
     edit.startNew(id);
   };
 
+  const commitNewCat = () => {
+    if (cancelAdd.current) {
+      cancelAdd.current = false;
+      setAddingCat(false);
+      setNewCatName('');
+      return;
+    }
+    const name = newCatName.trim();
+    setAddingCat(false);
+    setNewCatName('');
+    if (name) {
+      const id = genId('vc');
+      addVendorTag({ id, name });
+      setFilter(id);
+    }
+  };
+
+  const removeTag = (id: string) => {
+    if (filter === id) setFilter('all');
+    deleteVendorTag(id);
+  };
+
   return (
     <div className="space-y-6">
       <SectionHeading
@@ -231,30 +281,65 @@ export default function Vendors() {
         }
       />
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={() => setFilter('all')}
-          className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
-            filter === 'all'
-              ? 'border-blush-400 bg-blush-500 text-white'
-              : 'border-line bg-paper text-ink-soft hover:border-blush-300'
-          }`}
+          className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${tagButtonClass(filter === 'all')}`}
         >
           {t('vendors.categoryAll')}
         </button>
-        {CATEGORIES.map((c) => (
+        {BUILTIN_CATEGORIES.map((c) => (
           <button
             key={c}
             onClick={() => setFilter(c)}
-            className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
-              filter === c
-                ? 'border-blush-400 bg-blush-500 text-white'
-                : 'border-line bg-paper text-ink-soft hover:border-blush-300'
-            }`}
+            className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${tagButtonClass(filter === c)}`}
           >
             {t(`vendors.cat_${c}`)}
           </button>
         ))}
+        {vendorTags.map((tag) => {
+          const active = filter === tag.id;
+          return (
+            <span
+              key={tag.id}
+              className={`inline-flex items-center gap-1 rounded-full border py-1.5 pl-3 pr-1.5 text-xs transition-colors ${tagButtonClass(active)}`}
+            >
+              <button onClick={() => setFilter(tag.id)}>{tag.name || t('common.untitled')}</button>
+              <button
+                onClick={() => removeTag(tag.id)}
+                aria-label={t('common.delete')}
+                className={`rounded-full p-0.5 ${active ? 'hover:bg-white/25' : 'hover:bg-blush-100'}`}
+              >
+                <X size={11} />
+              </button>
+            </span>
+          );
+        })}
+        {addingCat ? (
+          <input
+            autoFocus
+            className="input-elegant w-52"
+            value={newCatName}
+            placeholder={t('vendors.categoryNamePlaceholder')}
+            onChange={(e) => setNewCatName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') e.currentTarget.blur();
+              if (e.key === 'Escape') {
+                cancelAdd.current = true;
+                e.currentTarget.blur();
+              }
+            }}
+            onBlur={commitNewCat}
+          />
+        ) : (
+          <button
+            onClick={() => setAddingCat(true)}
+            className="flex items-center gap-1 rounded-full border border-dashed border-line px-3 py-1.5 text-xs text-ink-soft transition-colors hover:border-blush-300 hover:text-blush-600"
+          >
+            <Plus size={12} />
+            {t('vendors.addCategory')}
+          </button>
+        )}
       </div>
 
       {filtered.length === 0 ? (
@@ -263,12 +348,7 @@ export default function Vendors() {
         <div className="space-y-3">
           {filtered.map((vendor) =>
             edit.isEditing(vendor.id) ? (
-              <VendorEdit
-                key={vendor.id}
-                vendor={vendor}
-                isNew={edit.isNew(vendor.id)}
-                onDone={edit.done}
-              />
+              <VendorEdit key={vendor.id} vendor={vendor} isNew={edit.isNew(vendor.id)} onDone={edit.done} />
             ) : (
               <VendorView key={vendor.id} vendor={vendor} onEdit={() => edit.startEdit(vendor.id)} />
             )

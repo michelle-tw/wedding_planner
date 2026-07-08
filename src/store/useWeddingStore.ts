@@ -9,6 +9,7 @@ import type {
   TaskItem,
   TaskStatus,
   Vendor,
+  VendorTag,
 } from '../types';
 import {
   seedBudgetGroups,
@@ -66,6 +67,7 @@ interface WeddingState {
   budgetItems: BudgetItem[];
   tasks: TaskItem[];
   vendors: Vendor[];
+  vendorTags: VendorTag[];
   guests: Guest[];
   documents: DocumentItem[];
 
@@ -92,6 +94,8 @@ interface WeddingState {
   addVendor: (vendor: Vendor) => void;
   updateVendor: (id: string, patch: Partial<Vendor>) => void;
   deleteVendor: (id: string) => void;
+  addVendorTag: (tag: VendorTag) => void;
+  deleteVendorTag: (id: string) => void;
 
   // actions — guests
   addGuest: (guest: Guest) => void;
@@ -118,6 +122,7 @@ const defaultState = {
   budgetItems: seedBudgetItems,
   tasks: seedTasks,
   vendors: seedVendors,
+  vendorTags: [] as VendorTag[],
   guests: seedGuests,
   documents: seedDocuments,
 };
@@ -170,6 +175,13 @@ export const useWeddingStore = create<WeddingState>()(
         })),
       deleteVendor: (id) =>
         set((state) => ({ vendors: state.vendors.filter((v) => v.id !== id) })),
+      addVendorTag: (tag) => set((state) => ({ vendorTags: [...state.vendorTags, tag] })),
+      deleteVendorTag: (id) =>
+        set((state) => ({
+          vendorTags: state.vendorTags.filter((c) => c.id !== id),
+          // vendors on the removed tag fall back to "other"
+          vendors: state.vendors.map((v) => (v.category === id ? { ...v, category: 'other' } : v)),
+        })),
 
       addGuest: (guest) => set((state) => ({ guests: [...state.guests, guest] })),
       updateGuest: (id, patch) =>
@@ -198,6 +210,7 @@ export const useWeddingStore = create<WeddingState>()(
           budgetItems: state.budgetItems,
           tasks: state.tasks,
           vendors: state.vendors,
+          vendorTags: state.vendorTags,
           guests: state.guests,
           documents: state.documents,
           exportedAt: new Date().toISOString(),
@@ -232,6 +245,7 @@ export const useWeddingStore = create<WeddingState>()(
             budgetItems,
             tasks: parsed.tasks,
             vendors: parsed.vendors,
+            vendorTags: Array.isArray(parsed.vendorTags) ? parsed.vendorTags : [],
             guests: parsed.guests,
             documents: parsed.documents,
           });
@@ -245,7 +259,7 @@ export const useWeddingStore = create<WeddingState>()(
     }),
     {
       name: 'wedding-planner-state',
-      version: 3,
+      version: 4,
       migrate: (persisted, version) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const state = persisted as any;
@@ -282,6 +296,11 @@ export const useWeddingStore = create<WeddingState>()(
           state.budgetGroups = seedBudgetGroups;
           state.budgetItems = flattenOldBudget(Array.isArray(state.budget) ? state.budget : []);
           delete state.budget;
+        }
+
+        // v<4: custom vendor category tags introduced.
+        if (version < 4 && !Array.isArray(state.vendorTags)) {
+          state.vendorTags = [];
         }
 
         // vendors & guests are user-entered — left untouched.
