@@ -100,7 +100,7 @@ export const useWeddingStore = create<WeddingState>()(
         set((state) => ({
           tasks: state.tasks.map((t) => (t.id === id ? { ...t, status } : t)),
         })),
-      addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
+      addTask: (task) => set((state) => ({ tasks: [task, ...state.tasks] })),
       updateTask: (id, patch) =>
         set((state) => ({
           tasks: state.tasks.map((t) => (t.id === id ? { ...t, ...patch } : t)),

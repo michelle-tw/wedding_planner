@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Kế Hoạch Cưới",
-    "subtitle": "Việt Nam × Đài Loan"
+    "subtitle": "Mi & Luân"
   },
   "nav": {
     "dashboard": "Tổng quan",
@@ -70,6 +70,8 @@
   },
   "tasks": {
     "heading": "Công việc cần làm",
+    "addTask": "Thêm việc",
+    "newTaskPlaceholder": "Tên công việc",
     "kanbanView": "Xem theo bảng",
     "timelineView": "Xem theo giai đoạn",
     "todo": "Chưa làm",

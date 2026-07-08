@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, GanttChartSquare, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { LayoutGrid, GanttChartSquare, Plus, Trash2 } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, Badge, ProgressBar } from '../components/ui';
-import { localize } from '../lib/utils';
+import { localize, genId } from '../lib/utils';
 import type { PhaseId, TaskItem, TaskStatus } from '../types';
 
 const STATUS_ORDER: TaskStatus[] = ['todo', 'doing', 'done'];
@@ -12,48 +12,47 @@ const PHASE_ORDER: PhaseId[] = ['phase1', 'phase2', 'phase3', 'phase4', 'phase5'
 function TaskCard({ task }: { task: TaskItem }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const moveTask = useWeddingStore((s) => s.moveTask);
-  const currentIndex = STATUS_ORDER.indexOf(task.status);
+  const { moveTask, updateTask, deleteTask } = useWeddingStore();
+  const isCustom = typeof task.title === 'string'; // user-added tasks have editable titles
 
   return (
     <div className="card-surface p-3.5">
-      <div className="mb-1.5 flex items-center justify-between gap-2">
+      <div className="mb-2 flex items-start justify-between gap-2">
         <Badge tone="gold">{t(`tasks.${task.phase}`)}</Badge>
-      </div>
-      <p className="text-sm font-medium text-ink">{localize(task.title, lang)}</p>
-      {task.note && <p className="mt-1 text-xs text-ink-soft">{localize(task.note, lang)}</p>}
-      <div className="mt-3 flex items-center justify-between gap-2">
         <button
-          disabled={currentIndex === 0}
-          onClick={() => moveTask(task.id, STATUS_ORDER[currentIndex - 1])}
-          className="flex items-center gap-1 rounded-full border border-line px-2 py-1 text-xs text-ink-soft transition-colors hover:border-blush-300 hover:text-blush-600 disabled:cursor-not-allowed disabled:opacity-30"
+          onClick={() => deleteTask(task.id)}
+          aria-label={t('common.delete')}
+          className="-mt-0.5 shrink-0 rounded-full p-1 text-ink-soft transition-colors hover:bg-blush-50 hover:text-blush-600"
         >
-          <ChevronLeft size={13} />
+          <Trash2 size={14} />
         </button>
-        <div className="flex gap-1">
-          {STATUS_ORDER.map((s) => (
-            <button
-              key={s}
-              onClick={() => moveTask(task.id, s)}
-              className={`h-1.5 w-4 rounded-full transition-colors ${
-                s === task.status ? 'bg-blush-500' : 'bg-cream'
-              }`}
-              aria-label={t(`tasks.${s}`)}
-            />
-          ))}
-        </div>
-        {currentIndex === STATUS_ORDER.length - 1 ? (
-          <span className="flex items-center gap-1 rounded-full bg-sage-100 px-2 py-1 text-xs text-sage-700">
-            <Check size={13} />
-          </span>
-        ) : (
+      </div>
+      {isCustom ? (
+        <input
+          className="input-elegant mb-2 border-none bg-transparent px-0 text-sm font-medium focus:bg-paper focus:px-2"
+          value={task.title as string}
+          placeholder={t('tasks.newTaskPlaceholder')}
+          onChange={(e) => updateTask(task.id, { title: e.target.value })}
+          autoFocus={task.title === ''}
+        />
+      ) : (
+        <p className="mb-2 text-sm font-medium text-ink">{localize(task.title, lang)}</p>
+      )}
+      {task.note && <p className="mb-2.5 text-xs text-ink-soft">{localize(task.note, lang)}</p>}
+      <div className="flex items-center gap-0.5 rounded-full border border-line bg-cream/50 p-0.5">
+        {STATUS_ORDER.map((s) => (
           <button
-            onClick={() => moveTask(task.id, STATUS_ORDER[currentIndex + 1])}
-            className="flex items-center gap-1 rounded-full border border-line px-2 py-1 text-xs text-ink-soft transition-colors hover:border-blush-300 hover:text-blush-600"
+            key={s}
+            onClick={() => moveTask(task.id, s)}
+            className={`flex-1 rounded-full px-2 py-1 text-xs font-medium transition-colors ${
+              s === task.status
+                ? 'bg-blush-500 text-white shadow-soft'
+                : 'text-ink-soft hover:text-blush-600'
+            }`}
           >
-            <ChevronRight size={13} />
+            {t(`tasks.${s}`)}
           </button>
-        )}
+        ))}
       </div>
     </div>
   );
@@ -134,30 +133,43 @@ function TimelinePhaseGroupView() {
 export default function Tasks() {
   const { t } = useTranslation();
   const [view, setView] = useState<'kanban' | 'timeline'>('kanban');
+  const addTask = useWeddingStore((s) => s.addTask);
+
+  const handleAdd = () =>
+    addTask({ id: genId('t'), phase: 'phase1', title: '', note: '', status: 'todo' });
 
   return (
     <div className="space-y-6">
       <SectionHeading
         title={t('tasks.heading')}
         action={
-          <div className="flex items-center gap-1 rounded-full border border-line bg-paper p-1 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1 rounded-full border border-line bg-paper p-1 text-xs">
+              <button
+                onClick={() => setView('kanban')}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
+                  view === 'kanban' ? 'bg-blush-500 text-white' : 'text-ink-soft hover:bg-blush-50'
+                }`}
+              >
+                <LayoutGrid size={14} strokeWidth={1.75} />
+                {t('tasks.kanbanView')}
+              </button>
+              <button
+                onClick={() => setView('timeline')}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
+                  view === 'timeline' ? 'bg-blush-500 text-white' : 'text-ink-soft hover:bg-blush-50'
+                }`}
+              >
+                <GanttChartSquare size={14} strokeWidth={1.75} />
+                {t('tasks.timelineView')}
+              </button>
+            </div>
             <button
-              onClick={() => setView('kanban')}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
-                view === 'kanban' ? 'bg-blush-500 text-white' : 'text-ink-soft hover:bg-blush-50'
-              }`}
+              onClick={handleAdd}
+              className="flex items-center gap-1.5 rounded-full bg-blush-500 px-4 py-2 text-sm font-medium text-white shadow-soft transition-colors hover:bg-blush-600"
             >
-              <LayoutGrid size={14} strokeWidth={1.75} />
-              {t('tasks.kanbanView')}
-            </button>
-            <button
-              onClick={() => setView('timeline')}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${
-                view === 'timeline' ? 'bg-blush-500 text-white' : 'text-ink-soft hover:bg-blush-50'
-              }`}
-            >
-              <GanttChartSquare size={14} strokeWidth={1.75} />
-              {t('tasks.timelineView')}
+              <Plus size={15} strokeWidth={2} />
+              {t('tasks.addTask')}
             </button>
           </div>
         }

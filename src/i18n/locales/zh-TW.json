@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "婚禮計畫",
-    "subtitle": "越南 × 台灣"
+    "subtitle": "Mi & Luân"
   },
   "nav": {
     "dashboard": "總覽",
@@ -70,6 +70,8 @@
   },
   "tasks": {
     "heading": "待辦事項",
+    "addTask": "新增待辦",
+    "newTaskPlaceholder": "待辦事項名稱",
     "kanbanView": "看板檢視",
     "timelineView": "階段檢視",
     "todo": "未開始",

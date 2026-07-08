@@ -71,7 +71,7 @@ export default function Layout() {
             </div>
             <div className="leading-tight">
               <p className="font-serif-heading text-lg font-medium text-ink">{t('app.title')}</p>
-              <p className="text-[11px] uppercase tracking-wide text-ink-soft">{t('app.subtitle')}</p>
+              <p className="font-serif-heading text-sm italic text-blush-500">{t('app.subtitle')}</p>
             </div>
           </div>
           <LanguageSwitcher />

@@ -130,23 +130,29 @@ export default function Dashboard() {
       </div>
 
       <Card>
-        <div className="mb-3 flex items-center gap-2">
-          <AlertCircle size={18} strokeWidth={1.75} className="text-gold-500" />
-          <h2 className="font-serif-heading text-lg font-medium text-ink">{t('dashboard.urgentTasks')}</h2>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={18} strokeWidth={1.75} className="text-gold-500" />
+            <h2 className="font-serif-heading text-lg font-medium text-ink">{t('dashboard.urgentTasks')}</h2>
+          </div>
+          {urgentTasks.length > 0 && earliestIncompletePhase && (
+            <Badge tone="gold">{t(`tasks.${earliestIncompletePhase}`)}</Badge>
+          )}
         </div>
         {urgentTasks.length === 0 ? (
           <p className="text-sm text-ink-soft">{t('dashboard.noUrgentTasks')}</p>
         ) : (
           <ul className="divide-y divide-line">
-            {urgentTasks.map((task) => (
-              <li key={task.id} className="flex items-start justify-between gap-3 py-2.5">
-                <div>
-                  <p className="text-sm font-medium text-ink">{localize(task.title, lang)}</p>
-                  {task.note && (
-                    <p className="mt-0.5 text-xs text-ink-soft">{localize(task.note, lang)}</p>
-                  )}
-                </div>
-                <Badge tone="gold">{t(`tasks.${task.phase}`)}</Badge>
+            {urgentTasks.map((task, i) => (
+              <li
+                key={task.id}
+                className="animate-fade-up py-2.5"
+                style={{ animationDelay: `${i * 55}ms` }}
+              >
+                <p className="text-sm font-medium text-ink">{localize(task.title, lang)}</p>
+                {task.note && (
+                  <p className="mt-0.5 text-xs text-ink-soft">{localize(task.note, lang)}</p>
+                )}
               </li>
             ))}
           </ul>
