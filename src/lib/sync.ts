@@ -113,9 +113,34 @@ export function generateSyncCode(): string {
 // Parse a Firebase config the user pasted — accepts JSON or a JS object literal
 // (as copied from the Firebase console, e.g. `const firebaseConfig = { ... }`).
 export function parseFirebaseConfig(text: string): SyncConfig | null {
-  const start = text.indexOf('{');
-  const end = text.lastIndexOf('}');
+  let start = -1;
+  let end = -1;
+
+  // Prefer the object literal that actually contains apiKey, so pasting the
+  // whole console snippet (imports + comments + config) still works.
+  const keyIdx = text.indexOf('apiKey');
+  if (keyIdx !== -1) {
+    start = text.lastIndexOf('{', keyIdx);
+    if (start !== -1) {
+      let depth = 0;
+      for (let i = start; i < text.length; i++) {
+        if (text[i] === '{') depth++;
+        else if (text[i] === '}') {
+          depth--;
+          if (depth === 0) {
+            end = i;
+            break;
+          }
+        }
+      }
+    }
+  }
+  if (start === -1 || end === -1) {
+    start = text.indexOf('{');
+    end = text.lastIndexOf('}');
+  }
   if (start === -1 || end === -1 || end < start) return null;
+
   const body = text.slice(start, end + 1);
   let obj: unknown;
   try {
