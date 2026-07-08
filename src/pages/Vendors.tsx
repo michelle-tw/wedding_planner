@@ -11,15 +11,16 @@ import { FileUploader, FileList } from '../components/FileAttachments';
 import type { NegotiationStatus, Vendor, VendorCategory } from '../types';
 
 const BUILTIN_CATEGORIES: VendorCategory[] = [
-  'catering',
+  'banquet',
   'videography',
-  'venue',
   'sound_lighting',
   'attire',
   'photography',
   'other',
 ];
 const BUILTIN_SET = new Set<string>(BUILTIN_CATEGORIES);
+// legacy ids that were merged into 'banquet'
+const LEGACY_BANQUET = new Set(['catering', 'venue']);
 
 const STATUSES: NegotiationStatus[] = ['contacted', 'negotiating', 'confirmed'];
 
@@ -35,6 +36,7 @@ function useCategoryLabel() {
   const vendorTags = useWeddingStore((s) => s.vendorTags);
   return (category: string, categoryOther?: string) => {
     if (category === 'other') return categoryOther?.trim() || t('vendors.cat_other');
+    if (LEGACY_BANQUET.has(category)) return t('vendors.cat_banquet');
     if (BUILTIN_SET.has(category)) return t(`vendors.cat_${category}`);
     return vendorTags.find((tag) => tag.id === category)?.name || t('vendors.cat_other');
   };

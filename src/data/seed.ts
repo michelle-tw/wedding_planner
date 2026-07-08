@@ -547,9 +547,8 @@ export const seedItineraries: ItineraryPlan[] = [
 // ---------------------------------------------------------------------------
 
 export const seedVendors: Vendor[] = [
-  { id: 'v-catering-1', name: '', category: 'catering', contact: '', quoteAmount: 0, status: 'contacted', notes: '' },
+  { id: 'v-banquet-1', name: '', category: 'banquet', contact: '', quoteAmount: 0, status: 'contacted', notes: '' },
   { id: 'v-video-1', name: '', category: 'videography', contact: '', quoteAmount: 0, status: 'contacted', notes: '' },
-  { id: 'v-venue-1', name: '', category: 'venue', contact: '', quoteAmount: 0, status: 'contacted', notes: '' },
   { id: 'v-sound-1', name: '', category: 'sound_lighting', contact: '', quoteAmount: 0, status: 'contacted', notes: '' },
   { id: 'v-attire-1', name: '', category: 'attire', contact: '', quoteAmount: 0, status: 'contacted', notes: '' },
   { id: 'v-photo-1', name: '', category: 'photography', contact: '', quoteAmount: 0, status: 'contacted', notes: '' },

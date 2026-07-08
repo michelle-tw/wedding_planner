@@ -37,10 +37,10 @@ export interface BudgetItem {
 }
 
 // Built-in vendor category ids (translated via i18n vendors.cat_*).
+// 'banquet' merges the former 'catering' + 'venue' (venues usually cater too).
 export type VendorCategory =
-  | 'catering'
+  | 'banquet'
   | 'videography'
-  | 'venue'
   | 'sound_lighting'
   | 'attire'
   | 'photography'

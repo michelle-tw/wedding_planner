@@ -259,7 +259,7 @@ export const useWeddingStore = create<WeddingState>()(
     }),
     {
       name: 'wedding-planner-state',
-      version: 5,
+      version: 6,
       migrate: (persisted, version) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const state = persisted as any;
@@ -315,6 +315,15 @@ export const useWeddingStore = create<WeddingState>()(
             void _drop;
             return { ...rest, links };
           });
+        }
+
+        // v<6: merge the 'catering' + 'venue' vendor categories into 'banquet'.
+        if (version < 6 && Array.isArray(state.vendors)) {
+          state.vendors = state.vendors.map((v: Record<string, unknown>) =>
+            v.category === 'catering' || v.category === 'venue'
+              ? { ...v, category: 'banquet' }
+              : v
+          );
         }
 
         // guests are user-entered — left untouched.
