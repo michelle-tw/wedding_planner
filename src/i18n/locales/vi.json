@@ -69,7 +69,8 @@
     "canCut": "Có thể cắt giảm",
     "overBudget": "Vượt ngân sách",
     "underBudget": "Trong ngân sách",
-    "guestCountRef": "Số khách hiện tại: {{count}} người."
+    "guestCountRef": "Số khách hiện tại: {{count}} người.",
+    "rateNote": "Tỷ giá tham khảo: 1 NT$ ≈ {{vnd}} ₫ (cập nhật mỗi ngày)"
   },
   "tasks": {
     "heading": "Công việc cần làm",
@@ -150,7 +151,7 @@
     "twDateLabel": "Ngày cưới Đài Loan (dự kiến)",
     "twDateHint": "Tránh tháng cô hồn (âm lịch).",
     "vnDateLabel": "Ngày cưới Việt Nam (cố định)",
-    "budgetCapLabel": "Tổng ngân sách trần (VNĐ)",
+    "budgetCapLabel": "Tổng ngân sách trần",
     "languageLabel": "Ngôn ngữ",
     "dataManagement": "Quản lý dữ liệu",
     "exportData": "Xuất dữ liệu (JSON)",

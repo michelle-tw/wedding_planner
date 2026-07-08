@@ -2,13 +2,15 @@ import { useTranslation } from 'react-i18next';
 import { Star, StarOff } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, VarianceBar, Badge } from '../components/ui';
-import { formatVnd, localize } from '../lib/utils';
+import { localize } from '../lib/utils';
+import { useCurrency } from '../lib/useCurrency';
 
 export default function Budget() {
   const { t, i18n } = useTranslation();
   const { budget, totalBudgetCap, setTotalBudgetCap, updateBudgetCategory, guests } =
     useWeddingStore();
   const lang = i18n.language;
+  const money = useCurrency();
 
   const totalPlanned = budget.reduce((sum, b) => sum + b.planned, 0);
   const totalActual = budget.reduce((sum, b) => sum + b.actual, 0);
@@ -26,12 +28,12 @@ export default function Budget() {
               <input
                 type="number"
                 className="input-elegant w-48 font-serif-heading text-xl"
-                value={totalBudgetCap}
+                value={money.toDisplay(totalBudgetCap)}
                 min={0}
-                step={1_000_000}
-                onChange={(e) => setTotalBudgetCap(Number(e.target.value) || 0)}
+                step={money.step}
+                onChange={(e) => setTotalBudgetCap(money.fromDisplay(Number(e.target.value) || 0))}
               />
-              <span className="text-sm text-ink-soft">{t('common.vnd')}</span>
+              <span className="text-sm text-ink-soft">{money.unit}</span>
             </div>
           </div>
           <Badge tone={isOverCap ? 'danger' : 'success'}>
@@ -45,12 +47,19 @@ export default function Budget() {
             actual={totalActual}
             labelPlanned={t('budget.plannedAmount')}
             labelActual={t('budget.actualAmount')}
-            formatValue={formatVnd}
+            formatValue={money.format}
           />
         </div>
         <p className="mt-3 text-xs text-ink-soft">
           {t('budget.guestCountRef', { count: guests.length })}
         </p>
+        {money.currency === 'TWD' && (
+          <p className="mt-1 text-xs text-ink-soft/70">
+            {t('budget.rateNote', {
+              vnd: new Intl.NumberFormat('vi-VN').format(Math.round(1 / money.twdPerVnd)),
+            })}
+          </p>
+        )}
       </Card>
 
       <div className="grid grid-cols-1 gap-4">
@@ -91,11 +100,11 @@ export default function Budget() {
                   <input
                     type="number"
                     className="input-elegant mt-1"
-                    value={cat.planned}
+                    value={money.toDisplay(cat.planned)}
                     min={0}
-                    step={500_000}
+                    step={money.step}
                     onChange={(e) =>
-                      updateBudgetCategory(cat.id, { planned: Number(e.target.value) || 0 })
+                      updateBudgetCategory(cat.id, { planned: money.fromDisplay(Number(e.target.value) || 0) })
                     }
                   />
                 </div>
@@ -104,11 +113,11 @@ export default function Budget() {
                   <input
                     type="number"
                     className="input-elegant mt-1"
-                    value={cat.actual}
+                    value={money.toDisplay(cat.actual)}
                     min={0}
-                    step={500_000}
+                    step={money.step}
                     onChange={(e) =>
-                      updateBudgetCategory(cat.id, { actual: Number(e.target.value) || 0 })
+                      updateBudgetCategory(cat.id, { actual: money.fromDisplay(Number(e.target.value) || 0) })
                     }
                   />
                 </div>
@@ -120,7 +129,7 @@ export default function Budget() {
                   actual={cat.actual}
                   labelPlanned={t('budget.plannedAmount')}
                   labelActual={t('budget.actualAmount')}
-                  formatValue={formatVnd}
+                  formatValue={money.format}
                 />
               </div>
               {catOver && (

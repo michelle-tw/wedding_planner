@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Plus, Trash2, Users, Pencil, ExternalLink } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, Badge, EmptyState, Field, EditActions } from '../components/ui';
-import { formatVnd, genId } from '../lib/utils';
+import { genId } from '../lib/utils';
+import { useCurrency } from '../lib/useCurrency';
 import { useEditableList } from '../lib/useEditableList';
 import type { NegotiationStatus, Vendor, VendorCategory } from '../types';
 
@@ -27,6 +28,7 @@ const statusTone: Record<NegotiationStatus, 'neutral' | 'warning' | 'success'> =
 
 function VendorView({ vendor, onEdit }: { vendor: Vendor; onEdit: () => void }) {
   const { t } = useTranslation();
+  const money = useCurrency();
   const deleteVendor = useWeddingStore((s) => s.deleteVendor);
 
   return (
@@ -42,7 +44,7 @@ function VendorView({ vendor, onEdit }: { vendor: Vendor; onEdit: () => void }) 
         <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-soft">
           <span>{vendor.contact || t('common.noContact')}</span>
           {vendor.quoteAmount > 0 && (
-            <span className="font-medium text-ink">{formatVnd(vendor.quoteAmount)}</span>
+            <span className="font-medium text-ink">{money.format(vendor.quoteAmount)}</span>
           )}
           {vendor.link && (
             <a
@@ -88,6 +90,7 @@ function VendorEdit({
   onDone: () => void;
 }) {
   const { t } = useTranslation();
+  const money = useCurrency();
   const { updateVendor, deleteVendor } = useWeddingStore();
   const [draft, setDraft] = useState<Vendor>(vendor);
   const set = (patch: Partial<Vendor>) => setDraft((d) => ({ ...d, ...patch }));
@@ -146,13 +149,14 @@ function VendorEdit({
             onChange={(e) => set({ contact: e.target.value })}
           />
         </Field>
-        <Field label={t('vendors.quoteAmount')}>
+        <Field label={`${t('vendors.quoteAmount')} (${money.unit})`}>
           <input
             type="number"
             className="input-elegant"
-            value={draft.quoteAmount}
+            value={money.toDisplay(draft.quoteAmount)}
             min={0}
-            onChange={(e) => set({ quoteAmount: Number(e.target.value) || 0 })}
+            step={money.step}
+            onChange={(e) => set({ quoteAmount: money.fromDisplay(Number(e.target.value) || 0) })}
           />
         </Field>
         <Field label={t('common.link')}>

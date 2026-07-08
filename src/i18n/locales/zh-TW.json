@@ -69,7 +69,8 @@
     "canCut": "可刪減",
     "overBudget": "超出預算",
     "underBudget": "預算內",
-    "guestCountRef": "目前賓客人數：{{count}} 位。"
+    "guestCountRef": "目前賓客人數：{{count}} 位。",
+    "rateNote": "參考匯率：1 NT$ ≈ {{vnd}} ₫（每日更新）"
   },
   "tasks": {
     "heading": "待辦事項",
@@ -150,7 +151,7 @@
     "twDateLabel": "台灣婚禮日期（預計）",
     "twDateHint": "避開農曆鬼月。",
     "vnDateLabel": "越南婚禮日期（固定）",
-    "budgetCapLabel": "總預算上限（越南盾）",
+    "budgetCapLabel": "總預算上限",
     "languageLabel": "語言",
     "dataManagement": "資料管理",
     "exportData": "匯出資料（JSON）",

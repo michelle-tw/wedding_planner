@@ -11,10 +11,12 @@ import Timeline from './pages/Timeline';
 import Documents from './pages/Documents';
 import Settings from './pages/Settings';
 import { useWeddingStore } from './store/useWeddingStore';
+import { useFxStore } from './store/useFxStore';
 
 export default function App() {
   const { i18n } = useTranslation();
   const language = useWeddingStore((s) => s.language);
+  const refreshRate = useFxStore((s) => s.refresh);
 
   // i18n initialises at 'vi'; on load (and any change) align it with the
   // persisted language so both UI chrome and content render in one language.
@@ -24,6 +26,11 @@ export default function App() {
     }
     document.documentElement.lang = language ?? 'vi';
   }, [language, i18n]);
+
+  // Refresh the VND->TWD exchange rate once per day (cached in localStorage).
+  useEffect(() => {
+    refreshRate();
+  }, [refreshRate]);
 
   return (
     <HashRouter>

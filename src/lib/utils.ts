@@ -7,10 +7,6 @@ export function localize(text: LocalizedText | undefined | null, lang: string): 
   return text[lang as Lang] ?? text.vi ?? '';
 }
 
-export function formatVnd(amount: number): string {
-  return new Intl.NumberFormat('vi-VN').format(Math.round(amount)) + ' ₫';
-}
-
 export function daysUntil(dateIso: string): number {
   const target = new Date(dateIso + 'T00:00:00');
   const now = new Date();

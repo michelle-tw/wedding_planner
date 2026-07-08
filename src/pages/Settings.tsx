@@ -4,10 +4,12 @@ import { Download, Upload, RotateCcw, Check, AlertCircle } from 'lucide-react';
 import { useWeddingStore, VN_WEDDING_DATE } from '../store/useWeddingStore';
 import { Card, SectionHeading } from '../components/ui';
 import { formatDate } from '../lib/utils';
+import { useCurrency } from '../lib/useCurrency';
 import type { Lang } from '../types';
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
+  const money = useCurrency();
   const {
     vnWeddingDate,
     twWeddingDate,
@@ -110,15 +112,17 @@ export default function Settings() {
         </div>
 
         <div>
-          <label className="text-sm font-medium text-ink">{t('settings.budgetCapLabel')}</label>
+          <label className="text-sm font-medium text-ink">
+            {t('settings.budgetCapLabel')} ({money.unit})
+          </label>
           <input
             type="number"
             className="input-elegant mt-1.5 max-w-xs"
-            value={totalBudgetCap}
+            value={money.toDisplay(totalBudgetCap)}
             min={0}
-            step={1_000_000}
+            step={money.step}
             onChange={(e) => {
-              setTotalBudgetCap(Number(e.target.value) || 0);
+              setTotalBudgetCap(money.fromDisplay(Number(e.target.value) || 0));
               flashSaved();
             }}
           />

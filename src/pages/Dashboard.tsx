@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { CalendarHeart, PartyPopper, AlertCircle, ArrowRight } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { Card, SectionHeading, ProgressBar, VarianceBar, Badge } from '../components/ui';
-import { daysUntil, formatDate, formatVnd, localize } from '../lib/utils';
+import { daysUntil, formatDate, localize } from '../lib/utils';
+import { useCurrency } from '../lib/useCurrency';
 
 function CountdownCard({
   label,
@@ -52,6 +53,7 @@ function CountdownCard({
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
+  const money = useCurrency();
   const { vnWeddingDate, twWeddingDate, totalBudgetCap, budget, tasks, guests } = useWeddingStore();
 
   const totalActual = budget.reduce((sum, b) => sum + b.actual, 0);
@@ -115,10 +117,10 @@ export default function Dashboard() {
             actual={totalActual}
             labelPlanned={t('dashboard.planned')}
             labelActual={t('dashboard.actual')}
-            formatValue={formatVnd}
+            formatValue={money.format}
           />
           <p className="mt-2 text-xs text-ink-soft">
-            {t('budget.totalCap')}: {formatVnd(totalBudgetCap)} · {t('common.total')} {t('dashboard.planned').toLowerCase()}: {formatVnd(totalPlanned)}
+            {t('budget.totalCap')}: {money.format(totalBudgetCap)} · {t('common.total')} {t('dashboard.planned').toLowerCase()}: {money.format(totalPlanned)}
           </p>
           <Link
             to="/budget"
