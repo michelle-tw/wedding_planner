@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/*
+  Fonts: "Playfair Display" (headings) and "Be Vietnam Pro" (body) are
+  self-hosted via Fontsource and imported as static files in main.tsx —
+  they are bundled into the build, not fetched from a runtime CDN, so the
+  app stays fully offline-capable. Be Vietnam Pro was drawn by a Vietnamese
+  foundry with correct hinting for stacked Vietnamese tone marks (ế ộ ữ ẫ
+  ợ), which generic system sans fonts often mis-position. Playfair Display
+  includes proper Vietnamese glyph coverage for the serif headings. System
+  fallbacks are still listed after them in case the self-hosted font files
+  ever fail to load.
+*/
+
+@theme {
+  /* Colors — warm cream/ivory base, blush pink, sage green, muted gold */
+  --color-ivory: #fbf7f1;
+  --color-cream: #f5efe4;
+  --color-paper: #fffdfa;
+
+  --color-blush-50: #fdf3f2;
+  --color-blush-100: #f9e4e2;
+  --color-blush-200: #f2cdc9;
+  --color-blush-300: #e6aca6;
+  --color-blush-400: #d68880;
+  --color-blush-500: #b76e79;
+  --color-blush-600: #9c5560;
+  --color-blush-700: #7d4148;
+
+  --color-sage-50: #f4f6f1;
+  --color-sage-100: #e6ebdf;
+  --color-sage-200: #cdd8bf;
+  --color-sage-300: #aebe98;
+  --color-sage-400: #8fa477;
+  --color-sage-500: #74895d;
+  --color-sage-600: #5b6d49;
+  --color-sage-700: #47563a;
+
+  --color-gold-50: #faf6ec;
+  --color-gold-100: #f2e8cc;
+  --color-gold-200: #e5d3a0;
+  --color-gold-300: #d6ba71;
+  --color-gold-400: #c6a15b;
+  --color-gold-500: #ab854a;
+  --color-gold-600: #8a6a3a;
+  --color-gold-700: #6b512c;
+
+  --color-ink: #3a332e;
+  --color-ink-soft: #6b625a;
+  --color-line: #e7ddce;
+
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: "Be Vietnam Pro", Inter, system-ui, -apple-system, sans-serif;
+
+  --shadow-soft: 0 1px 2px rgba(58, 51, 46, 0.04), 0 8px 24px -8px rgba(58, 51, 46, 0.12);
+  --shadow-softer: 0 1px 3px rgba(58, 51, 46, 0.06);
+
+  --radius-xl: 1.25rem;
+  --radius-lg: 0.875rem;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-serif-heading {
+  font-family: var(--font-serif);
+}
+
+::selection {
+  background-color: var(--color-blush-200);
+  color: var(--color-ink);
+}
+
+/* Subtle scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-blush-300) transparent;
+}
+
+.card-surface {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-softer);
+}
+
+.input-elegant {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 100%;
+}
+
+.input-elegant:focus {
+  outline: none;
+  border-color: var(--color-blush-400);
+  box-shadow: 0 0 0 3px var(--color-blush-100);
+}
