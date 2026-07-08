@@ -39,7 +39,10 @@
     "back": "返回",
     "untitled": "未命名",
     "openLink": "開啟連結",
-    "noContact": "尚無聯絡方式"
+    "noContact": "尚無聯絡方式",
+    "addImage": "新增圖片",
+    "openImage": "檢視圖片",
+    "images": "菜單／報價圖片"
   },
   "dashboard": {
     "heading": "婚禮總覽",

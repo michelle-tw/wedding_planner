@@ -6,6 +6,7 @@ import { Card, SectionHeading, Badge, EmptyState, Field, EditActions } from '../
 import { genId } from '../lib/utils';
 import { useCurrency } from '../lib/useCurrency';
 import { useEditableList } from '../lib/useEditableList';
+import { ImageUploader, ImageGallery } from '../components/ImageAttachments';
 import type { NegotiationStatus, Vendor, VendorCategory } from '../types';
 
 const CATEGORIES: VendorCategory[] = [
@@ -59,6 +60,11 @@ function VendorView({ vendor, onEdit }: { vendor: Vendor; onEdit: () => void }) 
           )}
         </div>
         {vendor.notes && <p className="mt-1.5 text-xs text-ink-soft">{vendor.notes}</p>}
+        {vendor.images && vendor.images.length > 0 && (
+          <div className="mt-2.5">
+            <ImageGallery images={vendor.images} />
+          </div>
+        )}
       </div>
       <div className="flex shrink-0 items-center gap-1">
         <button
@@ -177,6 +183,10 @@ function VendorEdit({
         />
       </Field>
 
+      <Field label={t('common.images')}>
+        <ImageUploader images={draft.images ?? []} onChange={(images) => set({ images })} />
+      </Field>
+
       <EditActions onSave={save} onCancel={cancel} saveLabel={t('common.save')} cancelLabel={t('common.cancel')} />
     </Card>
   );
@@ -201,6 +211,7 @@ export default function Vendors() {
       status: 'contacted',
       notes: '',
       link: '',
+      images: [],
     });
     edit.startNew(id);
   };

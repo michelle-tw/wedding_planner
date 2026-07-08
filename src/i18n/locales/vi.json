@@ -39,7 +39,10 @@
     "back": "Quay lại",
     "untitled": "Chưa đặt tên",
     "openLink": "Mở liên kết",
-    "noContact": "Chưa có liên hệ"
+    "noContact": "Chưa có liên hệ",
+    "addImage": "Thêm ảnh",
+    "openImage": "Xem ảnh",
+    "images": "Ảnh menu / báo giá"
   },
   "dashboard": {
     "heading": "Tổng quan đám cưới",

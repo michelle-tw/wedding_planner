@@ -60,6 +60,7 @@ export interface Vendor {
   status: NegotiationStatus;
   notes: string;
   link?: string;
+  images?: string[]; // menu / quote photos, stored as compressed data URLs
 }
 
 export type GuestSide = 'vn' | 'tw';
