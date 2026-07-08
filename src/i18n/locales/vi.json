@@ -73,7 +73,11 @@
     "overBudget": "Vượt ngân sách",
     "underBudget": "Trong ngân sách",
     "guestCountRef": "Số khách hiện tại: {{count}} người.",
-    "rateNote": "Tỷ giá tham khảo: 1 NT$ ≈ {{vnd}} ₫ (cập nhật mỗi ngày)"
+    "rateNote": "Tỷ giá tham khảo: 1 NT$ ≈ {{vnd}} ₫ (cập nhật mỗi ngày)",
+    "addItem": "Thêm hạng mục",
+    "addGroup": "Thêm nhóm",
+    "itemNamePlaceholder": "Tên hạng mục",
+    "groupNamePlaceholder": "Tên nhóm"
   },
   "tasks": {
     "heading": "Công việc cần làm",

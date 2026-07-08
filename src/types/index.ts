@@ -19,25 +19,21 @@ export interface TaskItem {
   assignee?: 'bride' | 'groom' | 'parents' | 'both';
 }
 
-export type BudgetCategoryId =
-  | 'food'
-  | 'video'
-  | 'venue'
-  | 'sound'
-  | 'attire'
-  | 'photo'
-  | 'ceremony'
-  | 'invitations'
-  | 'contingency';
+// Budget is a two-level structure: groups (VN wedding, TW wedding, travel…)
+// each holding line items that roll up into a group subtotal.
+export interface BudgetGroup {
+  id: string;
+  name: LocalizedText;
+}
 
-export interface BudgetCategory {
-  id: BudgetCategoryId;
+export interface BudgetItem {
+  id: string;
+  groupId: string;
   name: LocalizedText;
   planned: number;
   actual: number;
-  percent: number;
-  note: LocalizedText;
-  highPriority: boolean; // true = ⭐ high priority (don't cut), false = can-cut
+  note?: LocalizedText;
+  highPriority?: boolean; // ⭐ high priority (don't cut)
 }
 
 export type VendorCategory =

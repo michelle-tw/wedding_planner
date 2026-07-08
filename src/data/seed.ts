@@ -3,7 +3,8 @@
 // Copy is kept concise and factual — no advisory / explanatory padding.
 
 import type {
-  BudgetCategory,
+  BudgetGroup,
+  BudgetItem,
   TaskItem,
   Vendor,
   ItineraryPlan,
@@ -274,87 +275,149 @@ export const seedTasks: TaskItem[] = [
 // PHẦN 2 — BUDGET BREAKDOWN (100,000,000 VNĐ)
 // ---------------------------------------------------------------------------
 
-export const seedBudget: BudgetCategory[] = [
+export const seedBudgetGroups: BudgetGroup[] = [
+  { id: 'g_vn', name: { vi: 'Lễ cưới Việt Nam', 'zh-TW': '越南婚禮' } },
+  { id: 'g_tw', name: { vi: 'Lễ cưới Đài Loan', 'zh-TW': '台灣婚禮' } },
+  { id: 'g_travel', name: { vi: 'Đi lại & lưu trú 2 gia đình', 'zh-TW': '雙方家庭交通與住宿' } },
+];
+
+export const seedBudgetItems: BudgetItem[] = [
+  // --- Lễ cưới Việt Nam (the original 100M breakdown) ---
   {
     id: 'food',
+    groupId: 'g_vn',
     name: { vi: 'Đồ ăn & tiệc', 'zh-TW': '餐飲與婚宴' },
     planned: 42_000_000,
     actual: 0,
-    percent: 42,
     note: { vi: 'Gồm buffet, tráng miệng, đồ uống.', 'zh-TW': '含自助餐、甜點、飲料。' },
     highPriority: true,
   },
   {
     id: 'video',
+    groupId: 'g_vn',
     name: { vi: 'Phóng sự cưới + Video', 'zh-TW': '婚禮紀錄片與錄影' },
     planned: 22_000_000,
     actual: 0,
-    percent: 22,
     note: { vi: 'Quay trọn ngày, dựng phim ngắn cinematic.', 'zh-TW': '全天錄影，剪輯電影感短片。' },
     highPriority: true,
   },
   {
     id: 'venue',
+    groupId: 'g_vn',
     name: { vi: 'Địa điểm sân vườn + trang trí', 'zh-TW': '花園場地與布置' },
     planned: 13_000_000,
     actual: 0,
-    percent: 13,
     note: { vi: 'Backdrop lễ Vow, ghế khách, hoa trang trí.', 'zh-TW': '儀式背板、賓客座椅、花藝。' },
-    highPriority: false,
   },
   {
     id: 'sound',
+    groupId: 'g_vn',
     name: { vi: 'Âm thanh, ánh sáng, MC', 'zh-TW': '音響、燈光、主持' },
     planned: 6_000_000,
     actual: 0,
-    percent: 6,
     note: { vi: 'MC song ngữ Việt–Trung.', 'zh-TW': '中越雙語主持。' },
-    highPriority: false,
   },
   {
     id: 'attire',
+    groupId: 'g_vn',
     name: { vi: 'Trang phục cưới (thuê)', 'zh-TW': '婚禮服裝（租借）' },
     planned: 5_000_000,
     actual: 0,
-    percent: 5,
-    note: '',
-    highPriority: false,
   },
   {
     id: 'photo',
+    groupId: 'g_vn',
     name: { vi: 'Chụp ảnh cưới (studio)', 'zh-TW': '婚紗攝影（棚拍）' },
     planned: 4_000_000,
     actual: 0,
-    percent: 4,
-    note: '',
-    highPriority: false,
   },
   {
     id: 'ceremony',
+    groupId: 'g_vn',
     name: { vi: 'Lễ gia tiên', 'zh-TW': '祭祖儀式' },
     planned: 2_000_000,
     actual: 0,
-    percent: 2,
-    note: '',
-    highPriority: false,
   },
   {
     id: 'invitations',
+    groupId: 'g_vn',
     name: { vi: 'Thiệp mời & vật dụng nhỏ', 'zh-TW': '喜帖與小物' },
     planned: 2_000_000,
     actual: 0,
-    percent: 2,
-    note: '',
-    highPriority: false,
   },
   {
     id: 'contingency',
+    groupId: 'g_vn',
     name: { vi: 'Dự phòng phát sinh', 'zh-TW': '預備金' },
     planned: 4_000_000,
     actual: 0,
-    percent: 4,
     note: { vi: 'Cho tiệc ngoài trời.', 'zh-TW': '戶外婚禮備用。' },
     highPriority: true,
+  },
+  // --- Lễ cưới Đài Loan (fill in the amounts) ---
+  {
+    id: 'tw_banquet',
+    groupId: 'g_tw',
+    name: { vi: 'Tiệc cưới nhà hàng (Đài Loan)', 'zh-TW': '婚宴（台灣餐廳）' },
+    planned: 0,
+    actual: 0,
+  },
+  {
+    id: 'tw_attire',
+    groupId: 'g_tw',
+    name: { vi: 'Trang phục & trang điểm', 'zh-TW': '禮服與妝髮' },
+    planned: 0,
+    actual: 0,
+  },
+  {
+    id: 'tw_decor',
+    groupId: 'g_tw',
+    name: { vi: 'Trang trí & hoa', 'zh-TW': '布置與花藝' },
+    planned: 0,
+    actual: 0,
+  },
+  {
+    id: 'tw_gifts',
+    groupId: 'g_tw',
+    name: { vi: 'Sính lễ & quà cưới', 'zh-TW': '聘禮與喜餅' },
+    planned: 0,
+    actual: 0,
+  },
+  // --- Đi lại & lưu trú 2 gia đình ---
+  {
+    id: 'tr_flights',
+    groupId: 'g_travel',
+    name: { vi: 'Vé máy bay VN–Đài (khứ hồi)', 'zh-TW': '越南–台灣機票（來回）' },
+    planned: 0,
+    actual: 0,
+  },
+  {
+    id: 'tr_hotel',
+    groupId: 'g_travel',
+    name: { vi: 'Khách sạn / lưu trú', 'zh-TW': '飯店／住宿' },
+    planned: 0,
+    actual: 0,
+  },
+  {
+    id: 'tr_local_bd',
+    groupId: 'g_travel',
+    name: { vi: 'Di chuyển nội địa (Bình Dương)', 'zh-TW': '平陽當地交通' },
+    planned: 0,
+    actual: 0,
+  },
+  {
+    id: 'tr_local_tn',
+    groupId: 'g_travel',
+    name: { vi: 'Di chuyển nội địa (Đài Nam)', 'zh-TW': '台南當地交通' },
+    planned: 0,
+    actual: 0,
+  },
+  {
+    id: 'tr_food',
+    groupId: 'g_travel',
+    name: { vi: 'Ăn uống & tham quan', 'zh-TW': '餐飲與觀光' },
+    planned: 0,
+    actual: 0,
   },
 ];
 

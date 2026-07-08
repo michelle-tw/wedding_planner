@@ -73,7 +73,11 @@
     "overBudget": "超出預算",
     "underBudget": "預算內",
     "guestCountRef": "目前賓客人數：{{count}} 位。",
-    "rateNote": "參考匯率：1 NT$ ≈ {{vnd}} ₫（每日更新）"
+    "rateNote": "參考匯率：1 NT$ ≈ {{vnd}} ₫（每日更新）",
+    "addItem": "新增項目",
+    "addGroup": "新增群組",
+    "itemNamePlaceholder": "項目名稱",
+    "groupNamePlaceholder": "群組名稱"
   },
   "tasks": {
     "heading": "待辦事項",

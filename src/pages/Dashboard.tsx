@@ -54,10 +54,11 @@ export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const money = useCurrency();
-  const { vnWeddingDate, twWeddingDate, totalBudgetCap, budget, tasks, guests } = useWeddingStore();
+  const { vnWeddingDate, twWeddingDate, totalBudgetCap, budgetItems, tasks, guests } =
+    useWeddingStore();
 
-  const totalActual = budget.reduce((sum, b) => sum + b.actual, 0);
-  const totalPlanned = budget.reduce((sum, b) => sum + b.planned, 0);
+  const totalActual = budgetItems.reduce((sum, b) => sum + b.actual, 0);
+  const totalPlanned = budgetItems.reduce((sum, b) => sum + b.planned, 0);
 
   const doneCount = tasks.filter((t2) => t2.status === 'done').length;
   const completionPct = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
