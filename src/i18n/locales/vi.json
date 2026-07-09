@@ -142,7 +142,15 @@
     "stayTip": "Gợi ý lưu trú",
     "foodTip": "Món ăn nên thử",
     "expandDay": "Xem chi tiết",
-    "collapseDay": "Thu gọn"
+    "collapseDay": "Thu gọn",
+    "addItinerary": "Thêm lịch trình",
+    "itineraryNamePlaceholder": "Tên lịch trình (VD: 5 ngày ở Bình Dương)",
+    "emptyItineraries": "Chưa có lịch trình nào. Bấm \"Thêm lịch trình\" để tự lên kế hoạch.",
+    "addDay": "Thêm ngày",
+    "dayLabel": "Ngày {{n}}",
+    "stayNotePlaceholder": "Gợi ý lưu trú…",
+    "foodNotePlaceholder": "Món ăn nên thử…",
+    "dayPlaceholder": "Hoạt động trong ngày…"
   },
   "documents": {
     "heading": "Kho giấy tờ",

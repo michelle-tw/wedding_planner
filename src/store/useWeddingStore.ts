@@ -5,6 +5,7 @@ import type {
   BudgetItem,
   DocumentItem,
   Guest,
+  ItineraryPlan,
   Lang,
   TaskItem,
   TaskStatus,
@@ -70,6 +71,7 @@ interface WeddingState {
   vendorTags: VendorTag[];
   guests: Guest[];
   documents: DocumentItem[];
+  itineraries: ItineraryPlan[];
 
   // actions — settings
   setTwWeddingDate: (date: string) => void;
@@ -107,6 +109,11 @@ interface WeddingState {
   updateDocument: (id: string, patch: Partial<DocumentItem>) => void;
   deleteDocument: (id: string) => void;
 
+  // actions — itineraries
+  addItinerary: (itinerary: ItineraryPlan) => void;
+  updateItinerary: (id: string, patch: Partial<ItineraryPlan>) => void;
+  deleteItinerary: (id: string) => void;
+
   // data management
   exportState: () => string;
   importState: (json: string) => boolean;
@@ -125,6 +132,7 @@ const defaultState = {
   vendorTags: [] as VendorTag[],
   guests: seedGuests,
   documents: seedDocuments,
+  itineraries: [] as ItineraryPlan[],
 };
 
 export const useWeddingStore = create<WeddingState>()(
@@ -199,6 +207,15 @@ export const useWeddingStore = create<WeddingState>()(
       deleteDocument: (id) =>
         set((state) => ({ documents: state.documents.filter((d) => d.id !== id) })),
 
+      addItinerary: (itinerary) =>
+        set((state) => ({ itineraries: [...state.itineraries, itinerary] })),
+      updateItinerary: (id, patch) =>
+        set((state) => ({
+          itineraries: state.itineraries.map((it) => (it.id === id ? { ...it, ...patch } : it)),
+        })),
+      deleteItinerary: (id) =>
+        set((state) => ({ itineraries: state.itineraries.filter((it) => it.id !== id) })),
+
       exportState: () => {
         const state = get();
         const exportable = {
@@ -213,6 +230,7 @@ export const useWeddingStore = create<WeddingState>()(
           vendorTags: state.vendorTags,
           guests: state.guests,
           documents: state.documents,
+          itineraries: state.itineraries,
           exportedAt: new Date().toISOString(),
         };
         return JSON.stringify(exportable, null, 2);
@@ -248,6 +266,7 @@ export const useWeddingStore = create<WeddingState>()(
             vendorTags: Array.isArray(parsed.vendorTags) ? parsed.vendorTags : [],
             guests: parsed.guests,
             documents: parsed.documents,
+            itineraries: Array.isArray(parsed.itineraries) ? parsed.itineraries : [],
           });
           return true;
         } catch {
@@ -259,7 +278,7 @@ export const useWeddingStore = create<WeddingState>()(
     }),
     {
       name: 'wedding-planner-state',
-      version: 6,
+      version: 7,
       migrate: (persisted, version) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const state = persisted as any;
@@ -324,6 +343,11 @@ export const useWeddingStore = create<WeddingState>()(
               ? { ...v, category: 'banquet' }
               : v
           );
+        }
+
+        // v<7: itineraries became user-editable (start empty).
+        if (version < 7 && !Array.isArray(state.itineraries)) {
+          state.itineraries = [];
         }
 
         // guests are user-entered — left untouched.

@@ -142,7 +142,15 @@
     "stayTip": "住宿建議",
     "foodTip": "推薦美食",
     "expandDay": "查看詳情",
-    "collapseDay": "收合"
+    "collapseDay": "收合",
+    "addItinerary": "新增行程",
+    "itineraryNamePlaceholder": "行程名稱（例：平陽 5 日）",
+    "emptyItineraries": "尚無行程，點「新增行程」開始規劃。",
+    "addDay": "新增一天",
+    "dayLabel": "第 {{n}} 天",
+    "stayNotePlaceholder": "住宿建議…",
+    "foodNotePlaceholder": "推薦美食…",
+    "dayPlaceholder": "當天行程…"
   },
   "documents": {
     "heading": "文件庫",

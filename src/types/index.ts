@@ -103,18 +103,17 @@ export interface DocumentItem {
   notes?: string;
 }
 
-export interface ItineraryActivity {
-  day: number;
-  activities: LocalizedText;
+// Itineraries are fully user-editable (plain strings) and start empty.
+export interface ItineraryDay {
+  activities: string;
 }
 
 export interface ItineraryPlan {
-  id: 'binh_duong' | 'dai_nam';
-  titleKey: string;
-  location: string;
-  stayNote: LocalizedText;
-  days: ItineraryActivity[];
-  foodNote: LocalizedText;
+  id: string;
+  title: string;
+  stayNote: string;
+  foodNote: string;
+  days: ItineraryDay[];
 }
 
 export interface WeddingSettings {

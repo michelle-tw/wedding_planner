@@ -7,7 +7,6 @@ import type {
   BudgetItem,
   TaskItem,
   Vendor,
-  ItineraryPlan,
   Guest,
   DocumentItem,
 } from '../types';
@@ -421,126 +420,6 @@ export const seedBudgetItems: BudgetItem[] = [
   },
 ];
 
-// ---------------------------------------------------------------------------
-// PHẦN 3 — LOGISTICS & TOUR PLAN
-// ---------------------------------------------------------------------------
-
-export const seedItineraries: ItineraryPlan[] = [
-  {
-    id: 'binh_duong',
-    titleKey: 'timeline.itinerary.binhDuong.title',
-    location: 'Bình Dương',
-    stayNote: {
-      vi: 'Ở khu nghỉ dưỡng Đại Nam (khách sạn 5 sao, biển nhân tạo) hoặc khách sạn trung tâm Thủ Dầu Một.',
-      'zh-TW': '可住大南度假區（五星飯店、人造海灘）或土龍木市中心飯店。',
-    },
-    days: [
-      {
-        day: 1,
-        activities: {
-          vi: 'Đón sân bay Tân Sơn Nhất, về Bình Dương (~1,5h). Nhận phòng. Tối dạo Chợ đêm Bạch Đằng.',
-          'zh-TW': '新山一機場接機，前往平陽（約 1.5 小時）。入住。晚間逛白藤夜市。',
-        },
-      },
-      {
-        day: 2,
-        activities: {
-          vi: 'Khu du lịch Đại Nam (công viên chủ đề, Safari, biển nhân tạo). Trọn ngày.',
-          'zh-TW': '大南文獻樂境樂園（主題樂園、野生動物園、人造海灘），全天。',
-        },
-      },
-      {
-        day: 3,
-        activities: {
-          vi: 'Sáng: Chùa Hội Khánh, Nhà thờ Chánh tòa Phú Cường. Chiều: Vườn trái cây Lái Thiêu.',
-          'zh-TW': '上午：會慶寺、富強主教座堂。下午：Lái Thiêu 果園。',
-        },
-      },
-      {
-        day: 4,
-        activities: {
-          vi: 'Khu sinh thái Thủy Châu hoặc Dìn Ký. Không gian sông nước, ăn đặc sản miền Tây.',
-          'zh-TW': '水洲或 Dìn Ký 生態區。水鄉風光，品嘗越南西部料理。',
-        },
-      },
-      {
-        day: 5,
-        activities: {
-          vi: 'Mua quà lưu niệm (gốm sứ Minh Long), dạo phố đi bộ, tiễn sân bay.',
-          'zh-TW': '採買伴手禮（明龍陶瓷），逛步行街，送機。',
-        },
-      },
-    ],
-    foodNote: {
-      vi: 'Gỏi gà măng cụt Lái Thiêu, bò nướng ngói, nem Lái Thiêu, buffet hải sản.',
-      'zh-TW': 'Lái Thiêu 山竹雞絲涼拌、瓦片烤牛肉、Lái Thiêu 春捲、海鮮自助餐。',
-    },
-  },
-  {
-    id: 'dai_nam',
-    titleKey: 'timeline.itinerary.daiNam.title',
-    location: 'Đài Nam',
-    stayNote: {
-      vi: 'Ở khu trung tâm (中西區) để đi bộ tới nhiều khu ẩm thực/di tích, hoặc khu An Bình (安平) nếu muốn gần biển.',
-      'zh-TW': '可住中西區，步行可達多處美食與古蹟；或住安平區，鄰近海邊。',
-    },
-    days: [
-      {
-        day: 1,
-        activities: {
-          vi: 'Nhận phòng. Tối dạo phố cổ Thần Nông (神農街): đèn lồng đỏ, phố đá cổ.',
-          'zh-TW': '入住。晚間漫步神農街：紅燈籠、古石板街。',
-        },
-      },
-      {
-        day: 2,
-        activities: {
-          vi: 'Xích Khảm Lâu (赤崁樓), Văn Miếu (孔廟), phố Phủ Trung (府中街). Tối: chợ đêm Hoa Viên (花園夜市, mở Thứ 4/6/7/CN).',
-          'zh-TW': '赤崁樓、台南孔廟、府中街。晚間：花園夜市（週三、五、六、日營業）。',
-        },
-      },
-      {
-        day: 3,
-        activities: {
-          vi: 'Phố cổ An Bình (安平老街): pháo đài An Bình, An Bình Thụ Ốc (安平樹屋). Thử súp bò, bánh tôm.',
-          'zh-TW': '安平老街：安平古堡、安平樹屋。品嘗牛肉湯、蝦餅。',
-        },
-      },
-      {
-        day: 4,
-        activities: {
-          vi: 'Bảo tàng Chi Mei (奇美博物館). Chiều: Khu văn hóa sáng tạo Bờ Tường Xanh (藍晒圖文創園區).',
-          'zh-TW': '奇美博物館。下午：藍晒圖文創園區。',
-        },
-      },
-      {
-        day: 5,
-        activities: {
-          vi: 'Vườn quốc gia Đài Giang (台江國家公園), đường hầm xanh Tứ Thảo (四草綠色隧道): thuyền trong rừng ngập mặn.',
-          'zh-TW': '台江國家公園、四草綠色隧道：搭船遊紅樹林。',
-        },
-      },
-      {
-        day: 6,
-        activities: {
-          vi: 'Phố ẩm thực Quốc Hoa (國華街). Chiều: bách hóa Lâm Bách Hóa (林百貨, 1932).',
-          'zh-TW': '國華街美食。下午：林百貨（1932 年古蹟）。',
-        },
-      },
-      {
-        day: 7,
-        activities: {
-          vi: 'Ngày nghỉ linh hoạt/mua quà, hoặc suối nước nóng Quan Tử Lĩnh (關子嶺溫泉, cách trung tâm ~1h).',
-          'zh-TW': '彈性休息／採買，或前往關子嶺溫泉（距市中心約 1 小時）。',
-        },
-      },
-    ],
-    foodNote: {
-      vi: 'Súp bò tươi (牛肉湯), bánh gạo hấp (碗粿), cuốn tôm chiên Kim Đắc (金得春捲), bánh bao thịt A Tùng (阿松割包), đậu hũ hoa Đồng Ký (同記豆花).',
-      'zh-TW': '牛肉湯、碗粿、金得春捲、阿松割包、同記豆花。',
-    },
-  },
-];
 
 // ---------------------------------------------------------------------------
 // Vendors — placeholder starting structure per category
