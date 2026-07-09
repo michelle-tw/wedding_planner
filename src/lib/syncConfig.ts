@@ -12,3 +12,8 @@ export const SHARED_FIREBASE_CONFIG: SyncConfig = {
   messagingSenderId: '670090658343',
   appId: '1:670090658343:web:d3f247e021bd781a7b0402',
 };
+
+// The fixed shared "room" every device connects to by default — so opening the
+// app on any device shows the same shared plan (no link/code). Must be > 24
+// chars to satisfy the Firestore rule. Not a password; the app is share-by-URL.
+export const FIXED_SHARED_CODE = 'miluan-wedding-3e294-9f3a7c1e8b2d4f60a5';

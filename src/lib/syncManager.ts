@@ -57,12 +57,12 @@ export async function startSync() {
       (snap) => {
         const s = useSyncStore.getState();
         if (!snap) {
-          // no remote copy yet — seed it with our local state
+          // empty room — seed it with our local state
           primed = true;
           schedulePush(0);
           return;
         }
-        if (snap.updatedAt > lastKnownUpdatedAt) {
+        const adopt = () => {
           lastKnownUpdatedAt = snap.updatedAt;
           applyingRemote = true;
           const ok = useWeddingStore.getState().importState(snap.json);
@@ -70,12 +70,25 @@ export async function startSync() {
           if (ok) {
             s.setLastSyncedAt(snap.updatedAt);
             s.setError(null);
-            s.setStatus('synced');
           }
-        } else {
+        };
+
+        if (!primed) {
+          primed = true;
+          // First view this session: the copy with more data wins, so an empty
+          // device can't wipe a device that already has the real plan.
+          const localLen = useWeddingStore.getState().exportState().length;
+          if (snap.json.length + 200 < localLen) {
+            schedulePush(0); // local is clearly richer → push it up
+          } else {
+            adopt();
+          }
           s.setStatus('synced');
+          return;
         }
-        primed = true;
+
+        if (snap.updatedAt > lastKnownUpdatedAt) adopt();
+        s.setStatus('synced');
       },
       (e) => {
         const s = useSyncStore.getState();

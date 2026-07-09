@@ -14,7 +14,7 @@ import { useWeddingStore } from './store/useWeddingStore';
 import { useFxStore } from './store/useFxStore';
 import { useSyncStore } from './store/useSyncStore';
 import { startSync } from './lib/syncManager';
-import { SHARED_FIREBASE_CONFIG } from './lib/syncConfig';
+import { SHARED_FIREBASE_CONFIG, FIXED_SHARED_CODE } from './lib/syncConfig';
 
 export default function App() {
   const { i18n } = useTranslation();
@@ -36,14 +36,15 @@ export default function App() {
     refreshRate();
   }, [refreshRate]);
 
-  // A share link (?sync=<code>) auto-connects to the shared plan — no setup.
+  // Public sharing: every device auto-connects to the same shared room, so
+  // opening the app anywhere shows the same plan. A ?sync=<code> can still
+  // override to a private room.
   useEffect(() => {
     const urlCode = new URLSearchParams(window.location.search).get('sync');
-    if (urlCode && urlCode.length > 24) {
-      const s = useSyncStore.getState();
-      if (!s.enabled || s.code !== urlCode) {
-        s.enable(SHARED_FIREBASE_CONFIG, urlCode);
-      }
+    const code = urlCode && urlCode.length > 24 ? urlCode : FIXED_SHARED_CODE;
+    const s = useSyncStore.getState();
+    if (!s.enabled || s.code !== code) {
+      s.enable(SHARED_FIREBASE_CONFIG, code);
     }
   }, []);
 

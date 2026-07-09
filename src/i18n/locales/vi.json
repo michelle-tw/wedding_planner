@@ -177,6 +177,8 @@
     "sync": {
       "title": "Chia sẻ & đồng bộ",
       "desc": "Đồng bộ dữ liệu tự động giữa máy tính và điện thoại.",
+      "publicDesc": "Dữ liệu tự động chia sẻ. Ai mở app này (trên máy tính hay điện thoại) đều thấy và cùng cập nhật kế hoạch — không cần link, mã, hay cài đặt gì.",
+      "appLinkLabel": "Liên kết app — gửi cho ai cũng xem/sửa được",
       "shareOnDesc": "Bật lên để tạo một liên kết. Ai mở liên kết đó đều thấy và cùng cập nhật kế hoạch — không cần cài đặt gì (giống link Google Doc).",
       "enableShare": "Bật chia sẻ đám mây",
       "enableNote": "Bấm để đưa dữ liệu hiện tại lên đám mây và tạo liên kết chia sẻ.",
