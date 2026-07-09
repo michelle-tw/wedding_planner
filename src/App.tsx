@@ -14,6 +14,7 @@ import { useWeddingStore } from './store/useWeddingStore';
 import { useFxStore } from './store/useFxStore';
 import { useSyncStore } from './store/useSyncStore';
 import { startSync } from './lib/syncManager';
+import { SHARED_FIREBASE_CONFIG } from './lib/syncConfig';
 
 export default function App() {
   const { i18n } = useTranslation();
@@ -34,6 +35,17 @@ export default function App() {
   useEffect(() => {
     refreshRate();
   }, [refreshRate]);
+
+  // A share link (?sync=<code>) auto-connects to the shared plan — no setup.
+  useEffect(() => {
+    const urlCode = new URLSearchParams(window.location.search).get('sync');
+    if (urlCode && urlCode.length > 24) {
+      const s = useSyncStore.getState();
+      if (!s.enabled || s.code !== urlCode) {
+        s.enable(SHARED_FIREBASE_CONFIG, urlCode);
+      }
+    }
+  }, []);
 
   // Start cloud sync when it's turned on, and re-check on focus.
   useEffect(() => {

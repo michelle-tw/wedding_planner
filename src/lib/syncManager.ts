@@ -13,6 +13,9 @@ let pushTimer: ReturnType<typeof setTimeout> | null = null;
 let lastKnownUpdatedAt = 0;
 let applyingRemote = false;
 let started = false;
+// Don't push local state until we've seen the remote once — otherwise a device
+// opening a share link could overwrite the shared plan with its empty seed.
+let primed = false;
 
 function errText(e: unknown): string {
   if (e && typeof e === 'object' && 'message' in e) return String((e as { message: unknown }).message);
@@ -55,6 +58,7 @@ export async function startSync() {
         const s = useSyncStore.getState();
         if (!snap) {
           // no remote copy yet — seed it with our local state
+          primed = true;
           schedulePush(0);
           return;
         }
@@ -71,6 +75,7 @@ export async function startSync() {
         } else {
           s.setStatus('synced');
         }
+        primed = true;
       },
       (e) => {
         const s = useSyncStore.getState();
@@ -86,9 +91,9 @@ export async function startSync() {
     return;
   }
 
-  // push local edits (skip the ones we just applied from remote)
+  // push local edits (skip remote-applied changes, and wait until primed)
   unsubStore = useWeddingStore.subscribe(() => {
-    if (applyingRemote) return;
+    if (applyingRemote || !primed) return;
     schedulePush(1500);
   });
 }
@@ -102,6 +107,7 @@ export function stopSync() {
   pushTimer = null;
   started = false;
   lastKnownUpdatedAt = 0;
+  primed = false;
 }
 
 export async function restartSync() {
